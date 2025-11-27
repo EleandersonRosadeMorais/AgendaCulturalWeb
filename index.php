@@ -48,7 +48,8 @@ require_once 'header.php';
                         </div>
                     <?php endif; ?>
 
-                    <div class="evento-banner" style="background: linear-gradient(135deg, <?php echo $cor; ?> 0%, <?php echo adjustBrightness($cor, -30); ?> 100%);">
+                    <div class="evento-banner">
+                        <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>" class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>
@@ -114,7 +115,8 @@ require_once 'header.php';
                         <i class="fas fa-check-circle"></i> Realizado
                     </div>
 
-                    <div class="evento-banner" style="background: linear-gradient(135deg, <?php echo $cor; ?> 0%, <?php echo adjustBrightness($cor, -30); ?> 100%);">
+                    <div class="evento-banner">
+                        <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>" class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>

@@ -566,6 +566,22 @@ $usuarioAtual = getUsuarioAtual();
                 </div>
             </div>
             <nav>
+                <!-- No header.php ou outras páginas -->
+                <script type="module">
+                    import {
+                        observarEstadoAuth
+                    } from './js/auth.js';
+
+                    observarEstadoAuth((estado) => {
+                        if (estado.logado) {
+                            console.log('Usuário logado:', estado.usuario);
+                            // Atualizar interface
+                        } else {
+                            console.log('Usuário não logado');
+                            // Redirecionar para login se necessário
+                        }
+                    });
+                </script>
                 <ul>
                     <li><a href="index.php" class="<?php echo $pagina == 'feed' ? 'active' : ''; ?>">
                             <i class="fas fa-home"></i> Feed
