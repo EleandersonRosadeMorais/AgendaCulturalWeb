@@ -2,6 +2,7 @@
 session_start();
 
 // Inicializar dados se não existirem
+// No array de eventos, substitua os 'banner' por URLs reais:
 if (!isset($_SESSION['eventos'])) {
     $_SESSION['eventos'] = [
         [
@@ -13,7 +14,7 @@ if (!isset($_SESSION['eventos'])) {
             'descricao' => 'Venha descobrir as carreiras que estarão em alta nos próximos anos com especialistas do mercado.',
             'tipo' => 'palestra',
             'responsavel' => 'Prof. Carlos Silva - Orientação Vocacional',
-            'banner' => 'palestra_futuro.jpg',
+            'banner' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
             'cor' => '#FF6B6B',
             'destaque' => true
         ],
@@ -26,7 +27,7 @@ if (!isset($_SESSION['eventos'])) {
             'descricao' => 'Exposição dos melhores projetos científicos desenvolvidos pelos alunos. Venha se inspirar!',
             'tipo' => 'feira',
             'responsavel' => 'Coord. Maria Santos - Departamento de Ciências',
-            'banner' => 'feira_ciencias.jpg',
+            'banner' => 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
             'cor' => '#4ECDC4',
             'destaque' => true
         ],
@@ -39,7 +40,7 @@ if (!isset($_SESSION['eventos'])) {
             'descricao' => 'Final do campeonato de vôlei entre as turmas do ensino médio. Venha torcer!',
             'tipo' => 'jogos',
             'responsavel' => 'Prof. Rodrigo Lima - Educação Física',
-            'banner' => 'torneio_volei.jpg',
+            'banner' => 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
             'cor' => '#45B7D1',
             'destaque' => false
         ],
@@ -52,7 +53,7 @@ if (!isset($_SESSION['eventos'])) {
             'descricao' => 'Reunião para entrega de boletins e discussão do desempenho dos alunos.',
             'tipo' => 'reuniao',
             'responsavel' => 'Diretora Ana Oliveira - Direção',
-            'banner' => 'reuniao_pais.jpg',
+            'banner' => 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
             'cor' => '#96CEB4',
             'destaque' => false
         ],
@@ -65,7 +66,7 @@ if (!isset($_SESSION['eventos'])) {
             'descricao' => 'Workshop prático de introdução à robótica para alunos do ensino médio.',
             'tipo' => 'palestra',
             'responsavel' => 'Prof. João Mendes - Tecnologia',
-            'banner' => 'workshop_robotica.jpg',
+            'banner' => 'https://images.unsplash.com/photo-1581091226825-c6b00e2a31c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
             'cor' => '#FF6B6B',
             'destaque' => false
         ]

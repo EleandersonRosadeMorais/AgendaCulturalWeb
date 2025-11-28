@@ -41,14 +41,15 @@ require_once 'header.php';
                 $hoje = date('Y-m-d');
                 $destaque = $evento['destaque'] ?? false;
             ?>
-                <div class="evento-card" style="border-top: 4px solid <?php echo $cor; ?>">
+                <div class="evento-card" data-tipo="<?php echo $evento['tipo']; ?>">
                     <?php if ($destaque): ?>
                         <div class="destaque-badge">
                             <i class="fas fa-star"></i> Destaque
                         </div>
                     <?php endif; ?>
 
-                    <div class="evento-banner" style="background: linear-gradient(135deg, <?php echo $cor; ?> 0%, <?php echo adjustBrightness($cor, -30); ?> 100%);">
+                    <div class="evento-banner">
+                        <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>" class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>
@@ -63,18 +64,18 @@ require_once 'header.php';
 
                         <div class="evento-detalhes">
                             <div class="detalhe-item">
-                                <i class="fas fa-calendar-day" style="color: <?php echo $cor; ?>"></i>
+                                <i class="fas fa-calendar-day"></i>
                                 <strong><?php echo date('d/m/Y', strtotime($evento['data'])); ?></strong>
                             </div>
                             <div class="detalhe-item">
-                                <i class="fas fa-clock" style="color: <?php echo $cor; ?>"></i>
+                                <i class="fas fa-clock"></i>
                                 <span class="detalhe-destaque">
                                     <i class="fas fa-bell"></i>
                                     <?php echo $evento['hora']; ?>
                                 </span>
                             </div>
                             <div class="detalhe-item">
-                                <i class="fas fa-map-marker-alt" style="color: <?php echo $cor; ?>"></i>
+                                <i class="fas fa-map-marker-alt"></i>
                                 <?php echo $evento['local']; ?>
                             </div>
                         </div>
@@ -103,18 +104,19 @@ require_once 'header.php';
     <?php endif; ?>
 
     <?php if (!empty($eventosPassados)): ?>
-        <h2 class="page-title" style="margin-top: 40px;">Eventos Realizados</h2>
+        <h2 class="page-title eventos-realizados-title">Eventos Realizados</h2>
         <div class="eventos-lista">
             <?php foreach ($eventosPassados as $evento):
                 $cor = getCorPorTipo($evento['tipo']);
                 $icone = getIconePorTipo($evento['tipo']);
             ?>
-                <div class="evento-card passado">
+                <div class="evento-card passado" data-tipo="<?php echo $evento['tipo']; ?>">
                     <div class="status-badge">
                         <i class="fas fa-check-circle"></i> Realizado
                     </div>
 
-                    <div class="evento-banner" style="background: linear-gradient(135deg, <?php echo $cor; ?> 0%, <?php echo adjustBrightness($cor, -30); ?> 100%);">
+                    <div class="evento-banner">
+                        <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>" class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>
@@ -141,13 +143,10 @@ require_once 'header.php';
                         <div class="evento-descricao"><?php echo $evento['descricao']; ?></div>
 
                         <div class="evento-acoes">
-                            <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-primary" style="background: #999;">
+                            <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-primary btn-passado">
                                 <i class="fas fa-info-circle"></i> Ver Detalhes
                             </a>
-                            <!-- Espaço reservado para manter o layout consistente -->
-                            <div style="width: 120px; visibility: hidden;">
-                                Botão
-                            </div>
+                            <div class="btn-spacer"></div>
                         </div>
                     </div>
                 </div>
@@ -157,5 +156,4 @@ require_once 'header.php';
 </div>
 
 </body>
-
 </html>

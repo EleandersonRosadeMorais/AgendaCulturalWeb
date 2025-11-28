@@ -2,11 +2,7 @@
 session_start();
 
 // Verifica se o usuário está logado (removi a verificação de admin para teste)
-if (!isset($_SESSION['user_id'])) {
-    // Se não estiver logado, redireciona para login
-    header('Location: index.php');
-    exit;
-}
+
 
 $errors = [];
 $success = '';
