@@ -39,23 +39,23 @@ $passado = $evento['data'] < $hoje;
 
 <div class="container">
     <div class="evento-detalhe">
-        <div class="detalhe-banner" style="background: linear-gradient(135deg, <?php echo $cor; ?> 0%, <?php echo adjustBrightness($cor, -30); ?> 100%);">
+        <div class="detalhe-banner">
             <div class="detalhe-banner-content">
-                <div class="evento-tipo" style="background: rgba(255, 255, 255, 0.9); margin-bottom: 15px;">
+                <div class="evento-tipo">
                     <?php echo $icone; ?>
                     <?php echo ucfirst($evento['tipo']); ?>
                 </div>
-                <h1 style="font-size: 32px; margin-bottom: 10px;"><?php echo $evento['titulo']; ?></h1>
-                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <span style="background: rgba(255, 255, 255, 0.2); padding: 8px 15px; border-radius: 20px;">
+                <h1 class="evento-titulo"><?php echo $evento['titulo']; ?></h1>
+                <div class="banner-info">
+                    <span class="info-badge">
                         <i class="fas fa-calendar-day"></i>
                         <?php echo date('d/m/Y', strtotime($evento['data'])); ?>
                     </span>
-                    <span style="background: rgba(255, 255, 255, 0.2); padding: 8px 15px; border-radius: 20px;">
+                    <span class="info-badge">
                         <i class="fas fa-clock"></i>
                         <?php echo $evento['hora']; ?>
                     </span>
-                    <span style="background: rgba(255, 255, 255, 0.2); padding: 8px 15px; border-radius: 20px;">
+                    <span class="info-badge">
                         <i class="fas fa-map-marker-alt"></i>
                         <?php echo $evento['local']; ?>
                     </span>
@@ -65,7 +65,7 @@ $passado = $evento['data'] < $hoje;
 
         <div class="detalhe-info">
             <?php if ($passado): ?>
-                <div class="status-badge" style="position: static; display: inline-block; margin-bottom: 20px;">
+                <div class="status-badge evento-realizado">
                     <i class="fas fa-check-circle"></i> Evento Realizado
                 </div>
             <?php endif; ?>
@@ -97,7 +97,7 @@ $passado = $evento['data'] < $hoje;
                 <div class="info-value"><?php echo ucfirst($evento['tipo']); ?></div>
             </div>
 
-            <div class="evento-acoes" style="margin-top: 30px; border-top: 1px solid #f0f0f0; padding-top: 20px;">
+            <div class="evento-acoes">
                 <a href="index.php" class="btn btn-primary">
                     <i class="fas fa-arrow-left"></i> Voltar ao Feed
                 </a>

@@ -25,7 +25,7 @@ require_once 'header.php';
             <div class="empty-icon">❤️</div>
             <h3>Nenhum evento favoritado</h3>
             <p>Adicione eventos aos favoritos para vê-los aqui!</p>
-            <a href="index.php" class="btn btn-primary" style="margin-top: 15px;">
+            <a href="index.php" class="btn btn-primary btn-voltar-feed">
                 <i class="fas fa-arrow-left"></i> Voltar ao Feed
             </a>
         </div>
@@ -43,14 +43,14 @@ require_once 'header.php';
                 $hoje = date('Y-m-d');
                 $passado = $evento['data'] < $hoje;
             ?>
-                <div class="evento-card <?php echo $passado ? 'passado' : ''; ?>" style="border-top: 4px solid <?php echo $cor; ?>">
+                <div class="evento-card <?php echo $passado ? 'passado' : ''; ?>">
                     <?php if ($passado): ?>
                         <div class="status-badge">
                             <i class="fas fa-check-circle"></i> Realizado
                         </div>
                     <?php endif; ?>
 
-                    <div class="evento-banner" style="background: linear-gradient(135deg, <?php echo $cor; ?> 0%, <?php echo adjustBrightness($cor, -30); ?> 100%);">
+                    <div class="evento-banner">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>
@@ -65,11 +65,11 @@ require_once 'header.php';
 
                         <div class="evento-detalhes">
                             <div class="detalhe-item">
-                                <i class="fas fa-calendar-day" style="color: <?php echo $cor; ?>"></i>
+                                <i class="fas fa-calendar-day"></i>
                                 <strong><?php echo date('d/m/Y', strtotime($evento['data'])); ?></strong>
                             </div>
                             <div class="detalhe-item">
-                                <i class="fas fa-clock" style="color: <?php echo $cor; ?>"></i>
+                                <i class="fas fa-clock"></i>
                                 <span class="detalhe-destaque">
                                     <i class="fas fa-bell"></i>
                                     <?php echo $evento['hora']; ?>
@@ -96,5 +96,4 @@ require_once 'header.php';
 </div>
 
 </body>
-
 </html>

@@ -67,6 +67,7 @@ if (isset($_GET['excluir'])) {
                     <span class="admin-badge">👑 ADMIN</span>
                     <a href="index.php">Feed</a>
                     <a href="cadastroevento.php">Cadastrar Evento</a>
+                    <a href="admin_usuarios.php">Gerenciar Usuários</a>
                     <a href="index.php">Sair</a>
                 </div>
             </div>
@@ -213,7 +214,7 @@ if (isset($_GET['excluir'])) {
                                         <a href="editar_evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-edit">
                                             ✏️ Editar
                                         </a>
-                                        <a href="visualizar_evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-view">
+                                        <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-view">
                                             👁️ Visualizar
                                         </a>
                                         <a href="admin_eventos.php?excluir=<?php echo $evento['id']; ?><?php echo !empty($termo_busca) ? '&buscar=' . urlencode($termo_busca) : ''; ?>"

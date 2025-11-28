@@ -1,69 +1,67 @@
 <?php
 session_start();
 
-// Verifica se o usuário está logado (removi a verificação de admin para teste)
-
+// Simulação de dados do evento (em um sistema real, viria do banco de dados)
+$evento = [
+    'id' => 1,
+    'titulo' => 'Festival de Música',
+    'data' => '2024-01-15',
+    'hora' => '18:00',
+    'local' => 'Parque Central',
+    'tipo_evento' => 'cultural',
+    'responsavel' => 'João Silva',
+    'descricao' => 'Um incrível festival de música com diversas atrações locais e nacionais.'
+];
 
 $errors = [];
 $success = '';
-$formData = [
-    'titulo' => '',
-    'data' => '',
-    'hora' => '',
-    'local' => '',
-    'descricao' => '',
-    'tipo_evento' => '',
-    'responsavel' => ''
-];
 
-// Processa o formulário de cadastro de evento
+// Processa o formulário de edição
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Simulação de processamento
-    $formData['titulo'] = htmlspecialchars(trim($_POST['titulo']));
-    $formData['data'] = htmlspecialchars(trim($_POST['data']));
-    $formData['hora'] = htmlspecialchars(trim($_POST['hora']));
-    $formData['local'] = htmlspecialchars(trim($_POST['local']));
-    $formData['descricao'] = htmlspecialchars(trim($_POST['descricao']));
-    $formData['tipo_evento'] = htmlspecialchars(trim($_POST['tipo_evento']));
-    $formData['responsavel'] = htmlspecialchars(trim($_POST['responsavel']));
-    
+    // Validação e processamento dos dados
+    $titulo = htmlspecialchars(trim($_POST['titulo']));
+    $data = htmlspecialchars(trim($_POST['data']));
+    $hora = htmlspecialchars(trim($_POST['hora']));
+    $local = htmlspecialchars(trim($_POST['local']));
+    $tipo_evento = htmlspecialchars(trim($_POST['tipo_evento']));
+    $responsavel = htmlspecialchars(trim($_POST['responsavel']));
+    $descricao = htmlspecialchars(trim($_POST['descricao']));
+
     // Validações básicas
-    if (empty($formData['titulo'])) {
+    if (empty($titulo)) {
         $errors[] = 'Título do evento é obrigatório';
     }
-    if (empty($formData['data'])) {
+    if (empty($data)) {
         $errors[] = 'Data do evento é obrigatória';
     }
-    if (empty($formData['hora'])) {
+    if (empty($hora)) {
         $errors[] = 'Hora do evento é obrigatória';
     }
-    if (empty($formData['local'])) {
+    if (empty($local)) {
         $errors[] = 'Local do evento é obrigatório';
     }
-    if (empty($formData['descricao'])) {
+    if (empty($descricao)) {
         $errors[] = 'Descrição do evento é obrigatória';
     }
-    if (empty($formData['tipo_evento'])) {
+    if (empty($tipo_evento)) {
         $errors[] = 'Tipo de evento é obrigatório';
     }
-    if (empty($formData['responsavel'])) {
+    if (empty($responsavel)) {
         $errors[] = 'Responsável pelo evento é obrigatório';
     }
-    
+
     // Se não há erros, simula sucesso
     if (empty($errors)) {
-        $success = 'Evento cadastrado com sucesso!';
+        $success = 'Evento atualizado com sucesso!';
         
-        // Limpa o formulário após sucesso
-        $formData = [
-            'titulo' => '',
-            'data' => '',
-            'hora' => '',
-            'local' => '',
-            'descricao' => '',
-            'tipo_evento' => '',
-            'responsavel' => ''
-        ];
+        // Atualiza os dados do evento (em um sistema real, salvaria no banco)
+        $evento['titulo'] = $titulo;
+        $evento['data'] = $data;
+        $evento['hora'] = $hora;
+        $evento['local'] = $local;
+        $evento['tipo_evento'] = $tipo_evento;
+        $evento['responsavel'] = $responsavel;
+        $evento['descricao'] = $descricao;
     }
 }
 ?>
@@ -72,15 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Evento - Sistema de Eventos</title>
+    <title>Editar Evento - Sistema de Eventos</title>
     <link rel="stylesheet" href="css/cadastroEvento.css">
 </head>
 <body>
     <div class="register-container">
         <div class="register-card">
             <div class="register-header">
-                <h1>Cadastrar Evento</h1>
-                <p>Preencha os dados do evento</p>
+                <h1>Editar Evento</h1>
+                <p>Atualize os dados do evento</p>
             </div>
             
             <?php if ($success): ?>
@@ -104,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full-width">
                         <label for="titulo">Título do Evento *</label>
                         <input type="text" id="titulo" name="titulo" 
-                               value="<?php echo htmlspecialchars($formData['titulo']); ?>" 
+                               value="<?php echo htmlspecialchars($evento['titulo']); ?>" 
                                placeholder="Digite o título do evento" required>
                     </div>
                 </div>
@@ -113,13 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label for="data">Data *</label>
                         <input type="date" id="data" name="data" 
-                               value="<?php echo htmlspecialchars($formData['data']); ?>" required>
+                               value="<?php echo htmlspecialchars($evento['data']); ?>" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="hora">Hora *</label>
                         <input type="time" id="hora" name="hora" 
-                               value="<?php echo htmlspecialchars($formData['hora']); ?>" required>
+                               value="<?php echo htmlspecialchars($evento['hora']); ?>" required>
                     </div>
                 </div>
 
@@ -127,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label for="local">Local *</label>
                         <input type="text" id="local" name="local" 
-                               value="<?php echo htmlspecialchars($formData['local']); ?>" 
+                               value="<?php echo htmlspecialchars($evento['local']); ?>" 
                                placeholder="Local do evento" required>
                     </div>
                     
@@ -135,12 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="tipo_evento">Tipo de Evento *</label>
                         <select id="tipo_evento" name="tipo_evento" class="form-select" required>
                             <option value="">Selecione o tipo</option>
-                            <option value="palestra" <?php echo $formData['tipo_evento'] === 'palestra' ? 'selected' : ''; ?>>Palestra</option>
-                            <option value="festa" <?php echo $formData['tipo_evento'] === 'festa' ? 'selected' : ''; ?>>Festa</option>
-                            <option value="esporte" <?php echo $formData['tipo_evento'] === 'esporte' ? 'selected' : ''; ?>>Esporte</option>
-                            <option value="reuniao" <?php echo $formData['tipo_evento'] === 'reuniao' ? 'selected' : ''; ?>>Reunião</option>
-                            <option value="cultural" <?php echo $formData['tipo_evento'] === 'cultural' ? 'selected' : ''; ?>>Cultural</option>
-                            <option value="academico" <?php echo $formData['tipo_evento'] === 'academico' ? 'selected' : ''; ?>>Acadêmico</option>
+                            <option value="palestra" <?php echo $evento['tipo_evento'] === 'palestra' ? 'selected' : ''; ?>>Palestra</option>
+                            <option value="festa" <?php echo $evento['tipo_evento'] === 'festa' ? 'selected' : ''; ?>>Festa</option>
+                            <option value="esporte" <?php echo $evento['tipo_evento'] === 'esporte' ? 'selected' : ''; ?>>Esporte</option>
+                            <option value="reuniao" <?php echo $evento['tipo_evento'] === 'reuniao' ? 'selected' : ''; ?>>Reunião</option>
+                            <option value="cultural" <?php echo $evento['tipo_evento'] === 'cultural' ? 'selected' : ''; ?>>Cultural</option>
+                            <option value="academico" <?php echo $evento['tipo_evento'] === 'academico' ? 'selected' : ''; ?>>Acadêmico</option>
                         </select>
                     </div>
                 </div>
@@ -149,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full-width">
                         <label for="responsavel">Responsável *</label>
                         <input type="text" id="responsavel" name="responsavel" 
-                               value="<?php echo htmlspecialchars($formData['responsavel']); ?>" 
+                               value="<?php echo htmlspecialchars($evento['responsavel']); ?>" 
                                placeholder="Nome do responsável pelo evento" required>
                     </div>
                 </div>
@@ -159,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="descricao">Descrição *</label>
                         <textarea id="descricao" name="descricao" 
                                   placeholder="Descreva o evento"
-                                  rows="4" required><?php echo htmlspecialchars($formData['descricao']); ?></textarea>
+                                  rows="4" required><?php echo htmlspecialchars($evento['descricao']); ?></textarea>
                     </div>
                 </div>
 
@@ -169,12 +167,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="file" id="banner" name="banner" 
                                accept="image/*" class="file-input">
                         <small class="file-help">Formatos: JPG, PNG, GIF (Max: 2MB)</small>
+                        <div class="current-file">
+                            <small>Banner atual: <strong>festival_musica.jpg</strong></small>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="cadastrarEvento-btn">Cadastrar Evento</button>
-                    <a href="index.php" class="voltar-btn">Voltar</a>
+                    <button type="submit" class="cadastrarEvento-btn">Atualizar Evento</button>
+                    <a href="admin_eventos.php" class="voltar-btn">Voltar</a>
+                </div>
+
+                <div class="event-info">
+                    <p><strong>ID do Evento:</strong> <?php echo $evento['id']; ?></p>
+                    <p><strong>Data de Criação:</strong> 01/01/2024 10:00</p>
                 </div>
             </form>
         </div>

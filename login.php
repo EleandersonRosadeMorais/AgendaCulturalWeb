@@ -47,9 +47,7 @@ $username = '';
                 
                 <button type="submit" class="login-btn">Entrar</button>
                 
-                <div class="divider">
-                    <span>ou</span>
-                </div>
+              
                 
                 <a href="cadastroUsuario.php" class="register-btn">Cadastrar nova conta</a>
             </form>
