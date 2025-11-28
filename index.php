@@ -49,6 +49,7 @@ require_once 'header.php';
                     <?php endif; ?>
 
                     <div class="evento-banner">
+                        <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>" class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>
@@ -115,6 +116,7 @@ require_once 'header.php';
                     </div>
 
                     <div class="evento-banner">
+                        <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>" class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                         <div class="banner-content">
                             <div class="evento-tipo">
                                 <?php echo $icone; ?>
