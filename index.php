@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once 'config.php';
+require_once 'config.php'; // ADICIONE ESTA LINHA - remova o require_once 'config.php' se não existir
 
 // Buscar eventos do MySQL
-$eventosFuturos = getEventosFuturos();
+//$eventosFuturos = getEventosFuturos();
 $eventosPassados = getEventosPassados();
 $usuarioAtual = getUsuarioAtual();
 

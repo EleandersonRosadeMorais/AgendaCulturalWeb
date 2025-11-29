@@ -3,9 +3,9 @@ session_start();
 
 // Configurações do MySQL - AJUSTE CONFORME SEU XAMPP
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'bdAgendaCultural');
-define('DB_USER', 'root');  // Padrão do XAMPP
-define('DB_PASS', '');      // Padrão do XAMPP (vazio)
+define('DB_NAME', 'jeferson_ac');
+define('DB_USER', 'jeferson_ac');  // Padrão do XAMPP
+define('DB_PASS', 'Ulbra@2025');      // Padrão do XAMPP (vazio)
 
 // Conexão com o MySQL
 try {
