@@ -1,244 +1,199 @@
 <?php
-session_start();
+// Configurações do MySQL
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'jeferson_ac'); // CORRIGIDO para o nome do seu banco
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
-// Inicializar dados se não existirem
-// No array de eventos, substitua os 'banner' por URLs reais:
-if (!isset($_SESSION['eventos'])) {
-    $_SESSION['eventos'] = [
-        [
-            'id' => 1,
-            'titulo' => 'Palestra: Profissões do Futuro',
-            'data' => '2025-12-15',
-            'hora' => '14:00',
-            'local' => 'Auditório Principal',
-            'descricao' => 'Venha descobrir as carreiras que estarão em alta nos próximos anos com especialistas do mercado.',
-            'tipo' => 'palestra',
-            'responsavel' => 'Prof. Carlos Silva - Orientação Vocacional',
-            'banner' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-            'cor' => '#FF6B6B',
-            'destaque' => true
-        ],
-        [
-            'id' => 2,
-            'titulo' => 'Feira de Ciências 2024',
-            'data' => '2024-06-20',
-            'hora' => '09:00',
-            'local' => 'Quadra Coberta',
-            'descricao' => 'Exposição dos melhores projetos científicos desenvolvidos pelos alunos. Venha se inspirar!',
-            'tipo' => 'feira',
-            'responsavel' => 'Coord. Maria Santos - Departamento de Ciências',
-            'banner' => 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-            'cor' => '#4ECDC4',
-            'destaque' => true
-        ],
-        [
-            'id' => 3,
-            'titulo' => 'Torneio de Vôlei Interclasses',
-            'data' => '2024-06-18',
-            'hora' => '16:00',
-            'local' => 'Quadra Poliesportiva',
-            'descricao' => 'Final do campeonato de vôlei entre as turmas do ensino médio. Venha torcer!',
-            'tipo' => 'jogos',
-            'responsavel' => 'Prof. Rodrigo Lima - Educação Física',
-            'banner' => 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-            'cor' => '#45B7D1',
-            'destaque' => false
-        ],
-        [
-            'id' => 4,
-            'titulo' => 'Reunião de Pais e Mestres - 2º Bimestre',
-            'data' => '2024-06-22',
-            'hora' => '19:00',
-            'local' => 'Salas de Aula',
-            'descricao' => 'Reunião para entrega de boletins e discussão do desempenho dos alunos.',
-            'tipo' => 'reuniao',
-            'responsavel' => 'Diretora Ana Oliveira - Direção',
-            'banner' => 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-            'cor' => '#96CEB4',
-            'destaque' => false
-        ],
-        [
-            'id' => 5,
-            'titulo' => 'Workshop de Robótica',
-            'data' => '2024-05-10',
-            'hora' => '13:30',
-            'local' => 'Laboratório de Informática',
-            'descricao' => 'Workshop prático de introdução à robótica para alunos do ensino médio.',
-            'tipo' => 'palestra',
-            'responsavel' => 'Prof. João Mendes - Tecnologia',
-            'banner' => 'https://images.unsplash.com/photo-1581091226825-c6b00e2a31c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
-            'cor' => '#FF6B6B',
-            'destaque' => false
-        ]
-    ];
+// Conexão com o MySQL
+try {
+    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8", DB_USER, DB_PASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erro na conexão: " . $e->getMessage());
 }
 
-if (!isset($_SESSION['favoritos'])) {
-    $_SESSION['favoritos'] = [];
-}
-
-// Inicializar dados de usuários se não existirem
-if (!isset($_SESSION['usuarios'])) {
-    $_SESSION['usuarios'] = [
-        [
-            'id' => 1,
-            'nome' => 'Administrador',
-            'email' => 'admin@escola.com',
-            'tipo' => 'admin',
-            'senha' => '123456'
-        ],
-        [
-            'id' => 2,
-            'nome' => 'João Silva',
-            'email' => 'aluno@escola.com',
-            'tipo' => 'usuario',
-            'senha' => '123456'
-        ]
-    ];
-}
-
-// Funções do sistema
-function adicionarFavorito($eventoId)
+// Função para verificar login
+function verificarLogin($email, $senha)
 {
-    if (!in_array($eventoId, $_SESSION['favoritos'])) {
-        $_SESSION['favoritos'][] = $eventoId;
-        return true;
-    }
-    return false;
-}
+    global $pdo;
 
-function removerFavorito($eventoId)
-{
-    $key = array_search($eventoId, $_SESSION['favoritos']);
-    if ($key !== false) {
-        unset($_SESSION['favoritos'][$key]);
-        $_SESSION['favoritos'] = array_values($_SESSION['favoritos']);
-        return true;
-    }
-    return false;
-}
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM usuario WHERE email = ?");
+        $stmt->execute([$email]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-function getEventoById($id)
-{
-    foreach ($_SESSION['eventos'] as $evento) {
-        if ($evento['id'] == $id) {
-            return $evento;
+        if ($usuario && password_verify($senha, $usuario['senha'])) {
+            // Login bem-sucedido
+            $_SESSION['usuario'] = [
+                'id' => $usuario['id_pk'],
+                'nome' => $usuario['nome'],
+                'email' => $usuario['email'],
+                'tipo' => $usuario['tipo'],
+                'dataNasc' => $usuario['dataNascimento'],
+                'cpf' => $usuario['cpf']
+            ];
+            return true;
         }
+        return false;
+    } catch (PDOException $e) {
+        error_log("Erro no login: " . $e->getMessage());
+        return false;
     }
-    return null;
 }
 
-function getEventosFavoritos()
+// Função para cadastrar usuário
+function cadastrarUsuario($dados)
 {
-    $favoritos = [];
-    foreach ($_SESSION['favoritos'] as $eventoId) {
-        $evento = getEventoById($eventoId);
-        if ($evento) {
-            $favoritos[] = $evento;
-        }
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO usuario (nome, dataNascimento, cpf, email, tipo, senha) VALUES (?, ?, ?, ?, ?, ?)");
+        $senhaHash = password_hash($dados['senha'], PASSWORD_DEFAULT);
+
+        return $stmt->execute([
+            $dados['nome'],
+            $dados['dataNasc'],
+            $dados['cpf'],
+            $dados['email'],
+            $dados['tipo'] ?? 'comum',
+            $senhaHash
+        ]);
+    } catch (PDOException $e) {
+        error_log("Erro no cadastro: " . $e->getMessage());
+        return false;
     }
-    return $favoritos;
 }
 
+// Função para buscar eventos futuros - CORRIGIDA
 function getEventosFuturos()
 {
-    $hoje = date('Y-m-d');
-    $eventosFuturos = [];
+    global $pdo;
 
-    foreach ($_SESSION['eventos'] as $evento) {
-        if ($evento['data'] >= $hoje) {
-            $eventosFuturos[] = $evento;
-        }
+    try {
+        $stmt = $pdo->prepare("
+            SELECT e.*, c.titulo as categoria_titulo 
+            FROM evento e 
+            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
+            WHERE e.data >= CURDATE() 
+            ORDER BY e.data, e.hora
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro ao buscar eventos futuros: " . $e->getMessage());
+        return [];
     }
-
-    // Ordenar por data mais próxima
-    usort($eventosFuturos, function ($a, $b) {
-        return strcmp($a['data'], $b['data']);
-    });
-
-    return $eventosFuturos;
 }
 
+// Função para buscar eventos passados - CORRIGIDA
 function getEventosPassados()
 {
-    $hoje = date('Y-m-d');
-    $eventosPassados = [];
+    global $pdo;
 
-    foreach ($_SESSION['eventos'] as $evento) {
-        if ($evento['data'] < $hoje) {
-            $eventosPassados[] = $evento;
-        }
-    }
-
-    return $eventosPassados;
-}
-
-function getCorPorTipo($tipo)
-{
-    switch ($tipo) {
-        case 'palestra':
-            return '#FF6B6B';
-        case 'feira':
-            return '#4ECDC4';
-        case 'jogos':
-            return '#45B7D1';
-        case 'reuniao':
-            return '#96CEB4';
-        default:
-            return '#CDD071';
+    try {
+        $stmt = $pdo->prepare("
+            SELECT e.*, c.titulo as categoria_titulo 
+            FROM evento e 
+            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
+            WHERE e.data < CURDATE() 
+            ORDER BY e.data DESC, e.hora DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro ao buscar eventos passados: " . $e->getMessage());
+        return [];
     }
 }
 
-function getIconePorTipo($tipo)
+// Função para adicionar favorito
+function adicionarFavorito($usuarioId, $eventoId)
 {
-    switch ($tipo) {
-        case 'palestra':
-            return '🎤';
-        case 'feira':
-            return '🎪';
-        case 'jogos':
-            return '⚽';
-        case 'reuniao':
-            return '👥';
-        default:
-            return '📅';
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO favorito (usuario_fk, evento_fk) VALUES (?, ?)");
+        return $stmt->execute([$usuarioId, $eventoId]);
+    } catch (PDOException $e) {
+        error_log("Erro ao adicionar favorito: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Função para remover favorito
+function removerFavorito($usuarioId, $eventoId)
+{
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM favorito WHERE usuario_fk = ? AND evento_fk = ?");
+        return $stmt->execute([$usuarioId, $eventoId]);
+    } catch (PDOException $e) {
+        error_log("Erro ao remover favorito: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Função para buscar favoritos do usuário - CORRIGIDA
+function getEventosFavoritos($usuarioId)
+{
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("
+            SELECT e.*, c.titulo as categoria_titulo 
+            FROM evento e 
+            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
+            INNER JOIN favorito f ON e.id_pk = f.evento_fk 
+            WHERE f.usuario_fk = ? 
+            ORDER BY e.data, e.hora
+        ");
+        $stmt->execute([$usuarioId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro ao buscar favoritos: " . $e->getMessage());
+        return [];
     }
 }
 
 // Função para obter usuário atual
 function getUsuarioAtual()
 {
-    return $_SESSION['usuario_logado'] ?? null;
+    return $_SESSION['usuario'] ?? null;
 }
 
 // Função para verificar se é admin
 function isAdmin()
 {
-    $usuario = getUsuarioAtual();
-    return $usuario && $usuario['tipo'] === 'admin';
+    return ($_SESSION['usuario']['tipo'] ?? '') === 'admin';
 }
 
-// Função auxiliar para ajustar brilho da cor
-function adjustBrightness($hex, $steps)
+// Funções auxiliares para cores e ícones
+function getCorPorTipo($tipo)
 {
-    $steps = max(-255, min(255, $steps));
-    $hex = str_replace('#', '', $hex);
+    $cores = [
+        'Música' => '#FF6B6B',
+        'Educação' => '#4ECDC4',
+        'Cultura' => '#45B7D1',
+        'Esportes' => '#96CEB4',
+        'Feira' => '#FFA726',
+        'teatro' => '#AB47BC',
+        'workshop' => '#26A69A'
+    ];
+    return $cores[$tipo] ?? '#02416D';
+}
 
-    if (strlen($hex) == 3) {
-        $hex = str_repeat(substr($hex, 0, 1), 2) . str_repeat(substr($hex, 1, 1), 2) . str_repeat(substr($hex, 2, 1), 2);
-    }
-
-    $r = hexdec(substr($hex, 0, 2));
-    $g = hexdec(substr($hex, 2, 2));
-    $b = hexdec(substr($hex, 4, 2));
-
-    $r = max(0, min(255, $r + $steps));
-    $g = max(0, min(255, $g + $steps));
-    $b = max(0, min(255, $b + $steps));
-
-    $r_hex = str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
-    $g_hex = str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
-    $b_hex = str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-
-    return '#' . $r_hex . $g_hex . $b_hex;
+function getIconePorTipo($tipo)
+{
+    $icones = [
+        'Música' => '<i class="fas fa-music"></i>',
+        'Educação' => '<i class="fas fa-graduation-cap"></i>',
+        'Cultura' => '<i class="fas fa-landmark"></i>',
+        'Esportes' => '<i class="fas fa-running"></i>',
+        'Feira' => '<i class="fas fa-store"></i>',
+        'teatro' => '<i class="fas fa-theater-masks"></i>',
+        'workshop' => '<i class="fas fa-laptop-code"></i>'
+    ];
+    return $icones[$tipo] ?? '<i class="fas fa-calendar-alt"></i>';
 }

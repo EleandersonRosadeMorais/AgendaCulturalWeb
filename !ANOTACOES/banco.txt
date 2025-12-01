@@ -1,0 +1,117 @@
+CREATE DATABASE bdAgendaCultural;
+
+USE bdAgendaCultural;
+
+CREATE TABLE usuario (
+
+id_pk INT PRIMARY KEY AUTO_INCREMENT,
+
+nome VARCHAR(100) NOT NULL,
+
+dataNascimento DATE,
+
+cpf VARCHAR(14) UNIQUE NOT NULL,
+
+email VARCHAR(100) UNIQUE NOT NULL,
+
+tipo ENUM('comum', 'organizador', 'admin') DEFAULT 'comum',
+
+senha VARCHAR(255) NOT NULL
+
+);
+
+
+
+CREATE TABLE categoria (
+
+id_pk INT PRIMARY KEY AUTO_INCREMENT,
+
+titulo VARCHAR(100) NOT NULL,
+
+descricao TEXT
+
+);
+
+
+
+CREATE TABLE evento (
+
+id_pk INT PRIMARY KEY AUTO_INCREMENT,
+
+titulo VARCHAR(200) NOT NULL,
+
+data DATE NOT NULL,
+
+hora TIME NOT NULL,
+
+local VARCHAR(200) NOT NULL,
+
+descricao TEXT,
+
+tipoEvento VARCHAR(100),
+
+responsavel VARCHAR(100),
+
+banner VARCHAR(255),
+
+categoria_fk INT,
+
+usuario_fk INT,
+
+FOREIGN KEY (categoria_fk) REFERENCES categoria(id_pk),
+
+FOREIGN KEY (usuario_fk) REFERENCES usuario(id_pk)
+
+);
+
+
+
+CREATE TABLE favorito (
+
+id_pk INT PRIMARY KEY AUTO_INCREMENT,
+
+usuario_fk INT NOT NULL,
+
+evento_fk INT NOT NULL,
+
+dataCriacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+FOREIGN KEY (usuario_fk) REFERENCES usuario(id_pk),
+
+FOREIGN KEY (evento_fk) REFERENCES evento(id_pk),
+
+UNIQUE KEY unique_favorito (usuario_fk, evento_fk)
+
+);
+
+-- Inserir usuário de teste
+INSERT INTO usuario (nome, dataNascimento, cpf, email, tipo, senha) 
+VALUES (
+    'Murilo', 
+    '2007-05-20', 
+    '123.456.789-00', 
+    'mede@gmail.com', 
+    'comum', 
+    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+    -- A senha é "password"
+);
+
+-- Verificar se o usuário foi criado
+SELECT * FROM usuario;
+
+
+
+
+-- Inserir categorias
+INSERT INTO categoria (titulo, descricao) VALUES 
+('Música', 'Eventos musicais e shows'),
+('Educação', 'Palestras e workshops educacionais'),
+('Cultura', 'Eventos culturais e artísticos'),
+('Esportes', 'Eventos esportivos'),
+('Feira', 'Feiras e exposições');
+
+-- Inserir eventos
+INSERT INTO evento (titulo, data, hora, local, descricao, tipoEvento, responsavel, banner, categoria_fk, usuario_fk) VALUES 
+('Festival de Música', '2024-12-15', '18:00:00', 'Parque Central', 'Um festival com diversas bandas locais e nacionais.', 'Música', 'Produções ABC', 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400', 1, 1),
+('Workshop de Tecnologia', '2024-12-20', '14:00:00', 'Centro de Convenções', 'Workshop sobre as últimas tendências em tecnologia.', 'Educação', 'Tech Solutions', 'https://images.unsplash.com/photo-1545235617-9465d2a55698?w=400', 2, 1),
+('Feira de Artesanato', '2024-12-25', '10:00:00', 'Praça da Matriz', 'Feira com artesanatos locais e comida típica.', 'Cultura', 'Associação de Artesãos', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400', 3, 1);

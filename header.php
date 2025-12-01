@@ -1,28 +1,18 @@
 <?php
+// Não precisa de session_start() aqui - já foi chamado no index.php
 require_once 'config.php';
 
-// Determinar qual página mostrar
-$pagina = 'feed';
-if (isset($_GET['pagina'])) {
-    $pagina = $_GET['pagina'];
-}
-
-// Obter eventos conforme a necessidade
-$eventosFuturos = getEventosFuturos();
-$eventosPassados = getEventosPassados();
-$favoritos = getEventosFavoritos();
-
 $usuarioAtual = getUsuarioAtual();
+$favoritos = $usuarioAtual ? getEventosFavoritos($usuarioAtual['id']) : [];
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Escolar - Eventos</title>
+    <title>Agenda Cultural - Eventos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
     <header>
@@ -32,32 +22,17 @@ $usuarioAtual = getUsuarioAtual();
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <div>
-                    <div class="logo-text">Agenda Escolar</div>
+                    <div class="logo-text">Agenda Cultural</div>
                     <div class="logo-subtitle">Não perca nenhum evento!</div>
                 </div>
             </div>
-            <nav>
-                <!-- No header.php ou outras páginas -->
-                <script type="module">
-                    import {
-                        observarEstadoAuth
-                    } from './js/auth.js';
 
-                    observarEstadoAuth((estado) => {
-                        if (estado.logado) {
-                            console.log('Usuário logado:', estado.usuario);
-                            // Atualizar interface
-                        } else {
-                            console.log('Usuário não logado');
-                            // Redirecionar para login se necessário
-                        }
-                    });
-                </script>
+            <nav>
                 <ul>
-                    <li><a href="index.php" class="<?php echo $pagina == 'feed' ? 'active' : ''; ?>">
+                    <li><a href="index.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'active' : ''; ?>">
                             <i class="fas fa-home"></i> Feed
                         </a></li>
-                    <li><a href="favoritos.php" class="<?php echo $pagina == 'favoritos' ? 'active' : ''; ?>">
+                    <li><a href="favoritos.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'favoritos.php') ? 'active' : ''; ?>">
                             <i class="fas fa-heart"></i> Favoritos
                             <?php if (!empty($favoritos)): ?>
                                 <span class="nav-badge"><?php echo count($favoritos); ?></span>
@@ -65,10 +40,15 @@ $usuarioAtual = getUsuarioAtual();
                         </a></li>
 
                     <?php if ($usuarioAtual): ?>
+                        <!-- Menu do usuário logado -->
                         <li class="user-menu">
                             <a href="#" class="user-toggle">
-                                <i class="fas fa-user"></i>
-                                <?php echo htmlspecialchars($usuarioAtual['nome']); ?>
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        <?php echo strtoupper(substr($usuarioAtual['nome'], 0, 1)); ?>
+                                    </div>
+                                    <span class="user-name"><?php echo htmlspecialchars($usuarioAtual['nome']); ?></span>
+                                </div>
                                 <i class="fas fa-chevron-down" style="font-size: 12px; margin-left: 5px;"></i>
                             </a>
                             <div class="user-dropdown">
@@ -79,13 +59,18 @@ $usuarioAtual = getUsuarioAtual();
                                     <i class="fas fa-user-edit"></i> Editar Perfil
                                 </a>
 
-                                <?php if (isAdmin()): ?>
-                                    <a href="gerenciar_eventos.php" class="dropdown-item">
-                                        <i class="fas fa-calendar-plus"></i> Gerenciar Eventos
-                                    </a>
-                                    <a href="gerenciar_usuarios.php" class="dropdown-item">
-                                        <i class="fas fa-users-cog"></i> Gerenciar Usuários
-                                    </a>
+                                <?php if ($usuarioAtual['tipo'] === 'admin'): ?>
+                                    <div id="admin-menu">
+                                        <a href="cadastroEvento.php" class="dropdown-item">
+                                            <i class="fas fa-calendar-plus"></i> Criar Evento
+                                        </a>
+                                        <a href="admin_eventos.php" class="dropdown-item">
+                                            <i class="fas fa-calendar-alt"></i> Gerenciar Eventos
+                                        </a>
+                                        <a href="admin_usuarios.php" class="dropdown-item">
+                                            <i class="fas fa-users-cog"></i> Gerenciar Usuários
+                                        </a>
+                                    </div>
                                 <?php endif; ?>
 
                                 <div class="dropdown-divider"></div>
@@ -95,11 +80,17 @@ $usuarioAtual = getUsuarioAtual();
                             </div>
                         </li>
                     <?php else: ?>
-                        <li><a href="login.php" class="<?php echo $pagina == 'login' ? 'active' : ''; ?>">
+                        <!-- Link de login (mostrado quando usuário não está logado) -->
+                        <li id="login-menu">
+                            <a href="login.php" class="login-link">
                                 <i class="fas fa-sign-in-alt"></i> Login
-                            </a></li>
+                            </a>
+                        </li>
                     <?php endif; ?>
                 </ul>
             </nav>
         </div>
     </header>
+</body>
+
+</html>

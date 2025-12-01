@@ -1,15 +1,9 @@
-/* css/header.css */
-
 :root {
     --primary: #02416D;
     --secondary: #F8F8EC;
     --accent: #CDD071;
     --dark: #000000;
     --text: #333333;
-    --palestra: #FF6B6B;
-    --feira: #4ECDC4;
-    --jogos: #45B7D1;
-    --reuniao: #96CEB4;
 }
 
 * {
@@ -17,19 +11,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, var(--secondary) 0%, #ffffff 100%);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100vh;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
 }
 
 header {
@@ -49,7 +30,7 @@ header::before {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--palestra), var(--feira), var(--jogos), var(--reuniao));
+    background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
 }
 
 .header-content {
@@ -184,6 +165,7 @@ nav a.active {
     background: none;
     width: 100%;
     text-align: left;
+    cursor: pointer;
 }
 
 .dropdown-item:hover {
@@ -206,6 +188,35 @@ nav a.active {
     margin: 8px 0;
 }
 
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.login-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
@@ -220,30 +231,5 @@ nav a.active {
 
     .user-dropdown {
         right: -50px;
-    }
-}
-
-@media (max-width: 480px) {
-    .header-content {
-        padding: 0 15px;
-    }
-    
-    nav ul {
-        gap: 10px;
-    }
-    
-    nav a {
-        padding: 6px 12px;
-        font-size: 14px;
-    }
-    
-    .logo-text {
-        font-size: 20px;
-    }
-    
-    .logo-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
     }
 }
