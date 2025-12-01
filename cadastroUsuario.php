@@ -31,9 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nome_completo' => '',
             'idade' => '',
             'cpf' => '',
-            'email' => '',
-            'username' => '',
-            'user_type' => 'user'
+            'email' => ''
+            
         ];
     }
 }

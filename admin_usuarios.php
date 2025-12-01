@@ -269,5 +269,4 @@ if (isset($_GET['remover_admin'])) {
         </div>
     </footer>
 </body>
-
 </html>

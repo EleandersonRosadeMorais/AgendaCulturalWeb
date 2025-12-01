@@ -178,5 +178,4 @@ $favoritosIds = array_column($favoritosUsuario, 'id_pk');
         <?php endif; ?>
     </div>
 </body>
-
 </html>

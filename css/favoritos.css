@@ -1,0 +1,352 @@
+/* css/favoritos.css */
+
+/* Container principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Page Title */
+.page-title {
+    color: #02416D;
+    font-size: 2.2rem;
+    margin: 2rem 0 1.5rem 0;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* Empty State */
+.empty-message {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 2px solid #02416D;
+    margin: 2rem 0;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-message h3 {
+    color: #02416D;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.empty-message p {
+    color: #000000;
+    opacity: 0.8;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-voltar-feed {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* Eventos Lista */
+.eventos-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+/* Evento Card */
+.evento-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(2, 65, 109, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid #02416D;
+    border-top: 4px solid;
+    position: relative;
+}
+
+.evento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(2, 65, 109, 0.2);
+}
+
+.evento-card.passado {
+    opacity: 0.8;
+    border-color: #999;
+}
+
+.evento-card.passado:hover {
+    transform: none;
+}
+
+/* Status Badge */
+.status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #999;
+    color: #FFFFFF;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Evento Banner */
+.evento-banner {
+    padding: 2rem 1.5rem;
+    color: #FFFFFF;
+    position: relative;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+}
+
+.banner-content {
+    width: 100%;
+}
+
+.evento-tipo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.evento-banner h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Evento Info */
+.evento-info {
+    padding: 1.5rem;
+}
+
+.evento-titulo {
+    color: #02416D;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+/* Evento Detalhes */
+.evento-detalhes {
+    margin-bottom: 1rem;
+}
+
+.detalhe-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #000000;
+    font-size: 0.95rem;
+}
+
+.detalhe-item i {
+    width: 16px;
+    text-align: center;
+}
+
+.detalhe-destaque {
+    background: rgba(205, 208, 113, 0.2);
+    color: #02416D;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Evento Descrição */
+.evento-descricao {
+    color: #000000;
+    opacity: 0.8;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Evento Ações */
+.evento-acoes {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: space-between;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid;
+    font-size: 0.9rem;
+    text-align: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.btn-primary {
+    background: #02416D;
+    color: #F8F8EC;
+    border-color: #02416D;
+}
+
+.btn-primary:hover {
+    background: #CDD071;
+    color: #02416D;
+    transform: translateY(-2px);
+}
+
+.btn-remover {
+    background: #dc3545;
+    color: #FFFFFF;
+    border-color: #dc3545;
+}
+
+.btn-remover:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Cores para tipos de evento */
+.evento-card:nth-child(6n+1) {
+    border-top-color: #FF6B6B;
+}
+
+.evento-card:nth-child(6n+1) .evento-banner {
+    background: linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%);
+}
+
+.evento-card:nth-child(6n+2) {
+    border-top-color: #4ECDC4;
+}
+
+.evento-card:nth-child(6n+2) .evento-banner {
+    background: linear-gradient(135deg, #4ECDC4 0%, #44B3AC 100%);
+}
+
+.evento-card:nth-child(6n+3) {
+    border-top-color: #45B7D1;
+}
+
+.evento-card:nth-child(6n+3) .evento-banner {
+    background: linear-gradient(135deg, #45B7D1 0%, #3DA5BD 100%);
+}
+
+.evento-card:nth-child(6n+4) {
+    border-top-color: #96CEB4;
+}
+
+.evento-card:nth-child(6n+4) .evento-banner {
+    background: linear-gradient(135deg, #96CEB4 0%, #85BAA0 100%);
+}
+
+.evento-card:nth-child(6n+5) {
+    border-top-color: #FFEAA7;
+}
+
+.evento-card:nth-child(6n+5) .evento-banner {
+    background: linear-gradient(135deg, #FFEAA7 0%, #E6D396 100%);
+    color: #000000;
+}
+
+.evento-card:nth-child(6n+6) {
+    border-top-color: #DDA0DD;
+}
+
+.evento-card:nth-child(6n+6) .evento-banner {
+    background: linear-gradient(135deg, #DDA0DD 0%, #C890C8 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .eventos-lista {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .evento-acoes {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .evento-banner {
+        padding: 1.5rem 1rem;
+    }
+    
+    .evento-banner h3 {
+        font-size: 1.2rem;
+    }
+    
+    .evento-info {
+        padding: 1rem;
+    }
+    
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
+/* Animation for page load */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.evento-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Focus states for accessibility */
+.btn:focus {
+    outline: 3px solid rgba(205, 208, 113, 0.5);
+    outline-offset: 2px;
+}
