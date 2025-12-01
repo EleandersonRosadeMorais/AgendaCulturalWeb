@@ -45,7 +45,7 @@ Ele implementou funções em PHP, código HTML e CSS diretamente no arquivo, com
 
 Nesse dia eu criei o banco de dados em FireBase, e orientei os DEVs a como implementar o banco de dados no repositório, fiz um reuniao referente ao que ira ter nas tebelas, e por fim criei mais alguns cards ao todo foram 12 cards. A estrutura ficou assim:
 
-### Kanban Inicial
+### Kanban
 
 [SM] Criar plano diário de branch
 [BD][SM] Criar banco de dados FireBase
@@ -78,7 +78,7 @@ Nesse dia eu criei o banco de dados em FireBase, e orientei os DEVs a como imple
 
 O grande dia do banco de dados MYSQL, aquele dia onde mudamos nosso banco de dados, e por incrível que pareça, deu tudo certo nesse grupo, fizemos muito progesso e além do mais eu criei mais 1 cards, e a estrutura ficou da seguinte forma:
 
-### Kanban Inicial
+### Kanban
 [BD] Organizar o repositório, criar pastas e nomes coerentes
 [QA] Testar tela de favoritos
 [QA] Testar tela individual de cada evento
@@ -107,4 +107,48 @@ O grande dia do banco de dados MYSQL, aquele dia onde mudamos nosso banco de dad
   Como sempre Murilo sendo o destaque, conseguiu migrar o banco de dados inteiro em apenas um dia, fez tudo corretamente, e amanhã irá se encarregar de subir o repositório para o servidor. 
   
 ## Dia 4 — 28/11/2025
+
+### [SM] Eleanderson Rosa de Morais
+
+  Nesse dia em questão eu não fiz nada, apenas auxiliar em subir o servidor teste com o Murilo.
+
+---
+
+### [Dev] Bruno Martinho
+
+  Não compareceu!
+
+---
+
+### [Dev] Murilo Medeiros
+
+  Murilo em questão modificou os CSSs de algumas páginas e subiu um servidor test só para entendermos como funciona.
+
+---
+## Dia Extra — (29/30)/11/2025
+
+### [SM] Eleanderson Rosa de Morais
+
+  Nesse dia extra eu apenas criei quatro novos cards para a sprint 2.
+
+### Kanban
+[QA] Teste rapido e funcional sobre tudo feito ate agora, antes de subir para o servidor
+[BD] Subir para o servidor
+[BD] Criar compatibilidade com o .apk mobile
+[BD] Criar banco de dados no servidor
+
+---
+
+### [Dev] Bruno Martinho
+
+  Não fez nada!
+
+---
+
+### [Dev] Murilo Medeiros
+
+  Não fez nada!
+
+---
+## Dia 5 — 01/12/2025
 *(aguardando conteúdo)*
