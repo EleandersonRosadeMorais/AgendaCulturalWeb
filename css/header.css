@@ -1,235 +1,232 @@
-:root {
-    --primary: #02416D;
-    --secondary: #F8F8EC;
-    --accent: #CDD071;
-    --dark: #000000;
-    --text: #333333;
-}
+/* css/header.css */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-header {
-    background: linear-gradient(135deg, var(--primary) 0%, #012a4a 100%);
-    color: white;
-    padding: 20px 0;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-header::before {
-    content: "";
-    position: absolute;
+/* Estilos para o header */
+.main-header {
+    background: linear-gradient(135deg, #02416D 0%, #CDD071 100%);
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
+    z-index: 1000;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    position: relative;
-    z-index: 1;
 }
 
-.logo {
+.logo-link {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.logo-icon {
-    font-size: 28px;
-    background: var(--accent);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary);
-}
-
-.logo-text {
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
-
-.logo-subtitle {
-    font-size: 14px;
-    opacity: 0.8;
-    margin-top: -5px;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 15px;
-    align-items: center;
-}
-
-nav li {
-    position: relative;
-}
-
-nav a {
-    color: white;
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
     transition: all 0.3s ease;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
-nav a:hover,
-nav a.active {
-    background-color: rgba(255, 255, 255, 0.15);
+.logo-link:hover {
     transform: translateY(-2px);
 }
 
-.nav-badge {
-    background: var(--accent);
-    color: var(--primary);
-    border-radius: 10px;
-    padding: 2px 8px;
-    font-size: 12px;
-    font-weight: bold;
+.logo-link i {
+    margin-right: 10px;
+    font-size: 2rem;
 }
 
-/* Menu do Usuário */
-.user-menu {
-    position: relative;
-}
-
-.user-toggle {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.user-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    min-width: 220px;
-    padding: 10px 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    z-index: 1000;
-}
-
-.user-menu:hover .user-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.user-welcome {
-    padding: 10px 15px;
-    color: var(--primary);
-    border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.dropdown-item {
+.nav-list {
     display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
     align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    color: var(--text);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
+    gap: 1.5rem;
 }
 
-.dropdown-item:hover {
-    background: var(--secondary);
-    color: var(--primary);
-}
-
-.dropdown-item.logout {
-    color: #FF6B6B;
-}
-
-.dropdown-item.logout:hover {
-    background: #FF6B6B;
+.nav-list a {
     color: white;
-}
-
-.dropdown-divider {
-    height: 1px;
-    background: #f0f0f0;
-    margin: 8px 0;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary);
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.user-name {
-    font-weight: 600;
-}
-
-.login-link {
+    text-decoration: none;
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
+.nav-list a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Link de administrador */
+.admin-link {
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid gold;
+}
+
+.admin-link:hover {
+    background: rgba(255, 215, 0, 0.3);
+}
+
+/* Botão de cadastro/registro */
+.register-btn {
+    background: #CDD071;
+    color: #02416D !important;
+    font-weight: 600;
+}
+
+.register-btn:hover {
+    background: #e8ecaa;
+    transform: translateY(-2px);
+}
+
+/* Menu do usuário */
+.user-menu {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}
+
+/* Dropdown menu */
+.nav-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    min-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: none;
+    list-style: none;
+    margin-top: 10px;
+    padding: 10px 0;
+    z-index: 1001;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu a {
+    color: #333 !important;
+    padding: 10px 20px;
+    display: block;
+    border-radius: 0;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 5px 0;
+}
+
+/* Ícones nos links */
+.nav-list i {
+    font-size: 1.1rem;
+}
+
+/* Indicador de dropdown */
+.user-menu .fa-chevron-down {
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
-        gap: 15px;
+        gap: 1rem;
+        text-align: center;
     }
-
-    nav ul {
-        width: 100%;
-        justify-content: center;
+    
+    .nav-list {
         flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
     }
+    
+    .nav-list a {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 5px;
+        animation: none;
+    }
+    
+    .nav-dropdown:hover .dropdown-menu {
+        display: block;
+    }
+}
 
-    .user-dropdown {
-        right: -50px;
+@media (max-width: 480px) {
+    .logo-link {
+        font-size: 1.3rem;
     }
+    
+    .logo-link i {
+        font-size: 1.7rem;
+    }
+    
+    .nav-list {
+        gap: 0.5rem;
+    }
+    
+    .nav-list a {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    }
+    
+    .dropdown-menu {
+        min-width: 180px;
+    }
+}
+
+/* Estado ativo para link atual */
+.nav-list a.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+/* Badge para contador de favoritos (opcional) */
+.fav-badge {
+    background: #ff4757;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
 }

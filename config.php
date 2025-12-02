@@ -1,7 +1,7 @@
 <?php
 // Configurações do MySQL
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'jeferson_ac'); // CORRIGIDO para o nome do seu banco
+define('DB_NAME', 'bdAgendaCultural');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
@@ -13,133 +13,69 @@ try {
     die("Erro na conexão: " . $e->getMessage());
 }
 
+// ============ FUNÇÕES DO SISTEMA ============
+
 // Função para verificar login
 function verificarLogin($email, $senha)
 {
     global $pdo;
-
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM usuario WHERE email = ?");
-        $stmt->execute([$email]);
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($usuario && password_verify($senha, $usuario['senha'])) {
-            // Login bem-sucedido
-            $_SESSION['usuario'] = [
-                'id' => $usuario['id_pk'],
-                'nome' => $usuario['nome'],
-                'email' => $usuario['email'],
-                'tipo' => $usuario['tipo'],
-                'dataNasc' => $usuario['dataNascimento'],
-                'cpf' => $usuario['cpf']
-            ];
-            return true;
-        }
-        return false;
-    } catch (PDOException $e) {
-        error_log("Erro no login: " . $e->getMessage());
-        return false;
-    }
+    // ... (código existente)
 }
 
 // Função para cadastrar usuário
 function cadastrarUsuario($dados)
 {
     global $pdo;
-
-    try {
-        $stmt = $pdo->prepare("INSERT INTO usuario (nome, dataNascimento, cpf, email, tipo, senha) VALUES (?, ?, ?, ?, ?, ?)");
-        $senhaHash = password_hash($dados['senha'], PASSWORD_DEFAULT);
-
-        return $stmt->execute([
-            $dados['nome'],
-            $dados['dataNasc'],
-            $dados['cpf'],
-            $dados['email'],
-            $dados['tipo'] ?? 'comum',
-            $senhaHash
-        ]);
-    } catch (PDOException $e) {
-        error_log("Erro no cadastro: " . $e->getMessage());
-        return false;
-    }
+    // ... (código existente)
 }
 
-// Função para buscar eventos futuros - CORRIGIDA
+// Função para buscar eventos futuros
 function getEventosFuturos()
 {
     global $pdo;
-
-    try {
-        $stmt = $pdo->prepare("
-            SELECT e.*, c.titulo as categoria_titulo 
-            FROM evento e 
-            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
-            WHERE e.data >= CURDATE() 
-            ORDER BY e.data, e.hora
-        ");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Erro ao buscar eventos futuros: " . $e->getMessage());
-        return [];
-    }
+    // ... (código existente)
 }
 
-// Função para buscar eventos passados - CORRIGIDA
+// Função para buscar eventos passados
 function getEventosPassados()
 {
     global $pdo;
+    // ... (código existente)
+}
 
-    try {
-        $stmt = $pdo->prepare("
-            SELECT e.*, c.titulo as categoria_titulo 
-            FROM evento e 
-            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
-            WHERE e.data < CURDATE() 
-            ORDER BY e.data DESC, e.hora DESC
-        ");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Erro ao buscar eventos passados: " . $e->getMessage());
-        return [];
+// Função para verificar se é admin
+if (!function_exists('isAdmin')) {
+    function isAdmin()
+    {
+        return ($_SESSION['usuario']['tipo'] ?? '') === 'admin';
     }
+}
+
+// Função para obter usuário atual
+function getUsuarioAtual()
+{
+    return $_SESSION['usuario'] ?? null;
 }
 
 // Função para adicionar favorito
 function adicionarFavorito($usuarioId, $eventoId)
 {
     global $pdo;
-
-    try {
-        $stmt = $pdo->prepare("INSERT INTO favorito (usuario_fk, evento_fk) VALUES (?, ?)");
-        return $stmt->execute([$usuarioId, $eventoId]);
-    } catch (PDOException $e) {
-        error_log("Erro ao adicionar favorito: " . $e->getMessage());
-        return false;
-    }
+    // ... (código existente)
 }
 
 // Função para remover favorito
 function removerFavorito($usuarioId, $eventoId)
 {
     global $pdo;
-
-    try {
-        $stmt = $pdo->prepare("DELETE FROM favorito WHERE usuario_fk = ? AND evento_fk = ?");
-        return $stmt->execute([$usuarioId, $eventoId]);
-    } catch (PDOException $e) {
-        error_log("Erro ao remover favorito: " . $e->getMessage());
-        return false;
-    }
+    // ... (código existente)
 }
 
-// Função para buscar favoritos do usuário - CORRIGIDA
+// Função para buscar favoritos do usuário
 function getEventosFavoritos($usuarioId)
 {
     global $pdo;
-
+    
     try {
         $stmt = $pdo->prepare("
             SELECT e.*, c.titulo as categoria_titulo 
@@ -150,23 +86,15 @@ function getEventosFavoritos($usuarioId)
             ORDER BY e.data, e.hora
         ");
         $stmt->execute([$usuarioId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // SEMPRE retornar array, mesmo que vazio
+        return is_array($resultados) ? $resultados : [];
+        
     } catch (PDOException $e) {
         error_log("Erro ao buscar favoritos: " . $e->getMessage());
-        return [];
+        return []; // Retornar array vazio em caso de erro
     }
-}
-
-// Função para obter usuário atual
-function getUsuarioAtual()
-{
-    return $_SESSION['usuario'] ?? null;
-}
-
-// Função para verificar se é admin
-function isAdmin()
-{
-    return ($_SESSION['usuario']['tipo'] ?? '') === 'admin';
 }
 
 // Funções auxiliares para cores e ícones
