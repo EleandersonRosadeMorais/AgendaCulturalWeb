@@ -54,7 +54,11 @@ require_once 'config.php';
                                     
                                     <!-- MOSTRAR "Gerenciador" APENAS PARA ADMINS NO DROPDOWN -->
                                     <?php if (isAdmin()): ?>
-                                        <li><a href="admin_usuarios.php"><i class="fas fa-cog"></i> Gerenciador</a></li>
+                                        <li><a href="admin_usuarios.php"><i class="fas fa-cog"></i> Gerenciador Usuários</a></li>
+                                    <?php endif; ?>
+                                     
+                                    <?php if (isAdmin()): ?>
+                                        <li><a href="admin_eventos.php"><i class="fas fa-cog"></i> Gerenciador Eventos</a></li>
                                     <?php endif; ?>
                                     
                                     <li><hr class="dropdown-divider"></li>

@@ -3,30 +3,14 @@ session_start();
 require_once 'config.php';
 
 // Buscar TODOS os eventos do MySQL (sem filtrar por data)
-function getTodosEventos() {
-    global $pdo;
-    
-    try {
-        $stmt = $pdo->prepare("
-            SELECT e.*, c.titulo as categoria_titulo 
-            FROM evento e 
-            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
-            ORDER BY e.data DESC, e.hora DESC
-        ");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Erro ao buscar todos eventos: " . $e->getMessage());
-        return [];
-    }
-}
 
 // Função para separar eventos por data
-function separarEventosPorData($eventos) {
+function separarEventosPorData($eventos)
+{
     $eventosFuturos = [];
     $eventosPassados = [];
     $hoje = date('Y-m-d');
-    
+
     foreach ($eventos as $evento) {
         if ($evento['data'] >= $hoje) {
             $eventosFuturos[] = $evento;
@@ -34,12 +18,12 @@ function separarEventosPorData($eventos) {
             $eventosPassados[] = $evento;
         }
     }
-    
+
     // Ordenar futuros por data crescente, passados por data decrescente
-    usort($eventosFuturos, function($a, $b) {
+    usort($eventosFuturos, function ($a, $b) {
         return strtotime($a['data']) - strtotime($b['data']);
     });
-    
+
     return [
         'futuros' => $eventosFuturos,
         'passados' => $eventosPassados
@@ -75,7 +59,7 @@ $favoritosIds = [];
 
 if ($usuarioAtual) {
     $favoritosUsuario = getEventosFavoritos($usuarioAtual['id']);
-    
+
     if (is_array($favoritosUsuario)) {
         $favoritosIds = array_column($favoritosUsuario, 'id_pk');
     }
@@ -83,6 +67,7 @@ if ($usuarioAtual) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -91,9 +76,10 @@ if ($usuarioAtual) {
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
+
 <body>
     <?php require_once 'header.php'; ?>
-    
+
     <div class="container">
         <!-- Contador de eventos -->
         <div class="eventos-stats">
@@ -132,18 +118,19 @@ if ($usuarioAtual) {
                     <i class="fas fa-calendar-alt"></i> Próximos Eventos
                     <span class="badge"><?php echo count($eventosFuturos); ?></span>
                 </h1>
-                
+
                 <div class="eventos-lista">
                     <?php foreach ($eventosFuturos as $evento):
                         $cor = getCorPorTipo($evento['tipoEvento']);
                         $icone = getIconePorTipo($evento['tipoEvento']);
                         $isFavorito = in_array($evento['id_pk'], $favoritosIds);
-                    ?>
+                        ?>
                         <div class="evento-card" style="border-top: 4px solid <?php echo $cor; ?>">
                             <div class="evento-banner <?php echo empty($evento['banner']) ? 'no-image' : ''; ?>">
                                 <?php if (!empty($evento['banner'])): ?>
                                     <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>"
-                                        class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
+                                        class="evento-banner-img"
+                                        onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                                 <?php endif; ?>
                                 <div class="banner-content">
                                     <div class="evento-tipo">
@@ -184,11 +171,13 @@ if ($usuarioAtual) {
 
                                     <?php if ($usuarioAtual): ?>
                                         <?php if ($isFavorito): ?>
-                                            <a href="index.php?acao=remover_favorito&id=<?php echo $evento['id_pk']; ?>" class="btn btn-remover">
+                                            <a href="index.php?acao=remover_favorito&id=<?php echo $evento['id_pk']; ?>"
+                                                class="btn btn-remover">
                                                 <i class="fas fa-heart-broken"></i> Remover
                                             </a>
                                         <?php else: ?>
-                                            <a href="index.php?acao=adicionar_favorito&id=<?php echo $evento['id_pk']; ?>" class="btn btn-favorito">
+                                            <a href="index.php?acao=adicionar_favorito&id=<?php echo $evento['id_pk']; ?>"
+                                                class="btn btn-favorito">
                                                 <i class="fas fa-heart"></i> Favoritar
                                             </a>
                                         <?php endif; ?>
@@ -210,12 +199,12 @@ if ($usuarioAtual) {
                     <i class="fas fa-history"></i> Eventos Realizados
                     <span class="badge"><?php echo count($eventosPassados); ?></span>
                 </h2>
-                
+
                 <div class="eventos-lista">
                     <?php foreach ($eventosPassados as $evento):
                         $cor = getCorPorTipo($evento['tipoEvento']);
                         $icone = getIconePorTipo($evento['tipoEvento']);
-                    ?>
+                        ?>
                         <div class="evento-card passado">
                             <div class="status-badge">
                                 <i class="fas fa-check-circle"></i> Realizado
@@ -224,7 +213,8 @@ if ($usuarioAtual) {
                             <div class="evento-banner <?php echo empty($evento['banner']) ? 'no-image' : ''; ?>">
                                 <?php if (!empty($evento['banner'])): ?>
                                     <img src="<?php echo $evento['banner']; ?>" alt="<?php echo htmlspecialchars($evento['titulo']); ?>"
-                                        class="evento-banner-img" onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
+                                        class="evento-banner-img"
+                                        onerror="this.style.display='none'; this.parentElement.classList.add('no-image')">
                                 <?php endif; ?>
                                 <div class="banner-content">
                                     <div class="evento-tipo">
@@ -252,8 +242,8 @@ if ($usuarioAtual) {
                                 <div class="evento-descricao"><?php echo htmlspecialchars($evento['descricao']); ?></div>
 
                                 <div class="evento-acoes">
-                                    <a href="visualizar_evento.php?id=<?php echo $evento['id_pk']; ?>" class="btn btn-primary" style="background: #999;">
-                                        <i class="fas fa-info-circle"></i> Ver Detalhes
+                                    <a href="evento.php?id=<?php echo $evento['id_pk']; ?>" class="btn btn-primary">
+                                        <i class="fas fa-info-circle"></i> Detalhes
                                     </a>
                                     <div style="width: 120px; visibility: hidden;">
                                         Botão
@@ -267,4 +257,5 @@ if ($usuarioAtual) {
         <?php endif; ?>
     </div>
 </body>
+
 </html>
