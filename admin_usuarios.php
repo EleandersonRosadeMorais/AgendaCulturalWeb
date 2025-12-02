@@ -1,272 +1,330 @@
 <?php
 session_start();
+require_once 'config.php';
 
-// Dados de exemplo
-$usuarios = [
-    [
-        'id' => 1,
-        'nome' => 'Administrador',
-        'email' => 'admin@sistema.com',
-        'username' => 'admin',
-        'user_type' => 'admin',
-        'idade' => 30,
-        'cpf' => '123.456.789-00',
-        'data_criacao' => '2024-01-01 10:00:00'
-    ],
-    [
-        'id' => 2,
-        'nome' => 'João Silva',
-        'email' => 'joao@email.com',
-        'username' => 'joaosilva',
-        'user_type' => 'user',
-        'idade' => 25,
-        'cpf' => '987.654.321-00',
-        'data_criacao' => '2024-01-02 15:30:00'
-    ],
-    [
-        'id' => 3,
-        'nome' => 'Maria Santos',
-        'email' => 'maria@email.com',
-        'username' => 'mariasantos',
-        'user_type' => 'user',
-        'idade' => 28,
-        'cpf' => '456.789.123-00',
-        'data_criacao' => '2024-01-03 09:15:00'
-    ]
-];
+// Verificar se é admin
+if (!isset($_SESSION['usuario']) || !isAdmin()) {
+    header('Location: index.php');
+    exit();
+}
 
+// Buscar todos os usuários do banco
+function getTodosUsuarios() {
+    global $pdo;
+    
+    try {
+        $stmt = $pdo->prepare("
+            SELECT id_pk, nome, dataNascimento, cpf, email, tipo, 
+                   DATE_FORMAT(dataNascimento, '%d/%m/%Y') as data_nasc_formatada
+            FROM usuario 
+            ORDER BY tipo DESC, nome ASC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro ao buscar usuários: " . $e->getMessage());
+        return [];
+    }
+}
+
+// Buscar estatísticas
+function getEstatisticasUsuarios() {
+    global $pdo;
+    
+    try {
+        $stats = [];
+        
+        // Total de usuários
+        $stmt = $pdo->query("SELECT COUNT(*) as total FROM usuario");
+        $stats['total'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        
+        // Por tipo
+        $stmt = $pdo->query("SELECT tipo, COUNT(*) as quantidade FROM usuario GROUP BY tipo");
+        $tipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $stats['admin'] = $stats['comum'] = $stats['organizador'] = 0;
+        foreach ($tipos as $tipo) {
+            $stats[$tipo['tipo']] = $tipo['quantidade'];
+        }
+        
+        return $stats;
+    } catch (PDOException $e) {
+        error_log("Erro ao buscar estatísticas: " . $e->getMessage());
+        return ['total' => 0, 'admin' => 0, 'comum' => 0, 'organizador' => 0];
+    }
+}
+
+// Processar ações
 $mensagem_sucesso = '';
 $mensagem_erro = '';
 
-// Simulação de busca
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['acao']) && isset($_POST['usuario_id'])) {
+        $usuarioId = intval($_POST['usuario_id']);
+        
+        try {
+            if ($_POST['acao'] === 'alterar_tipo') {
+                $novoTipo = $_POST['novo_tipo'] ?? 'comum';
+                
+                $stmt = $pdo->prepare("UPDATE usuario SET tipo = ? WHERE id_pk = ?");
+                $stmt->execute([$novoTipo, $usuarioId]);
+                
+                $mensagem_sucesso = "Tipo de usuário alterado com sucesso!";
+                
+            } elseif ($_POST['acao'] === 'excluir_usuario') {
+                // Não permite excluir a si mesmo
+                if ($usuarioId == $_SESSION['usuario']['id']) {
+                    $mensagem_erro = "Você não pode excluir sua própria conta!";
+                } else {
+                    // Primeiro remove os eventos do usuário
+                    $stmt = $pdo->prepare("DELETE FROM favorito WHERE evento_fk IN (SELECT id_pk FROM evento WHERE usuario_fk = ?)");
+                    $stmt->execute([$usuarioId]);
+                    
+                    $stmt = $pdo->prepare("DELETE FROM evento WHERE usuario_fk = ?");
+                    $stmt->execute([$usuarioId]);
+                    
+                    // Depois remove os favoritos do usuário
+                    $stmt = $pdo->prepare("DELETE FROM favorito WHERE usuario_fk = ?");
+                    $stmt->execute([$usuarioId]);
+                    
+                    // Finalmente exclui o usuário
+                    $stmt = $pdo->prepare("DELETE FROM usuario WHERE id_pk = ?");
+                    $stmt->execute([$usuarioId]);
+                    
+                    $mensagem_sucesso = "Usuário excluído com sucesso!";
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Erro na ação admin: " . $e->getMessage());
+            $mensagem_erro = "Erro ao processar a ação: " . $e->getMessage();
+        }
+    }
+}
+
+// Buscar dados
+$usuarios = getTodosUsuarios();
+$estatisticas = getEstatisticasUsuarios();
+
+// Processar busca
 $termo_busca = $_GET['buscar'] ?? '';
+$filtro_tipo = $_GET['tipo'] ?? '';
 $usuarios_filtrados = $usuarios;
 
 if (!empty($termo_busca)) {
     $usuarios_filtrados = array_filter($usuarios, function($usuario) use ($termo_busca) {
         return stripos($usuario['nome'], $termo_busca) !== false || 
                stripos($usuario['email'], $termo_busca) !== false ||
-               stripos($usuario['username'], $termo_busca) !== false;
+               stripos($usuario['cpf'], $termo_busta) !== false;
     });
 }
 
-// Processar ações
-if (isset($_GET['excluir'])) {
-    $id_excluir = intval($_GET['excluir']);
-    $mensagem_sucesso = "Usuário #{$id_excluir} excluído com sucesso!";
+if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
+    $usuarios_filtrados = array_filter($usuarios_filtrados, function($usuario) use ($filtro_tipo) {
+        return $usuario['tipo'] === $filtro_tipo;
+    });
 }
-
-if (isset($_GET['tornar_admin'])) {
-    $id_admin = intval($_GET['tornar_admin']);
-    $mensagem_sucesso = "Usuário #{$id_admin} agora é administrador!";
-}
-
-if (isset($_GET['remover_admin'])) {
-    $id_remove_admin = intval($_GET['remover_admin']);
-    $mensagem_sucesso = "Usuário #{$id_remove_admin} não é mais administrador!";
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciar Usuários - Admin - Sistema de Eventos</title>
+    <title>Gerenciar Usuários - Agenda Cultural</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/admin_usuarios.css">
 </head>
-
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>Sistema de Eventos</h1>
-                </div>
-                <div class="nav-links">
-                    <span class="admin-badge">👑 ADMIN</span>
-                    <a href="index.php">Feed</a>
-                    <a href="cadastrousuario.php">Cadastrar Usuário</a>
-                    <a href="admin_eventos.php">Gerenciar Eventos</a>
-                    <a href="index.php">Sair</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="page-header">
-            <h2>Gerenciador de Usuários</h2>
-            <p>Painel administrativo - Gerencie todos os usuários do sistema</p>
+    <?php include 'header.php'; ?>
+    
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-users-cog"></i> Gerenciador de Usuários</h1>
+            <p>Painel administrativo para gerenciar usuários do sistema</p>
+            <p class="admin-logado">Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario']['nome']); ?></strong> (<?php echo htmlspecialchars($_SESSION['usuario']['email']); ?>)</p>
         </div>
 
+        <!-- Mensagens -->
         <?php if ($mensagem_sucesso): ?>
             <div class="alert alert-success">
-                ✅ <?php echo htmlspecialchars($mensagem_sucesso); ?>
+                <i class="fas fa-check-circle"></i> <?php echo $mensagem_sucesso; ?>
             </div>
         <?php endif; ?>
 
         <?php if ($mensagem_erro): ?>
             <div class="alert alert-error">
-                ❌ <?php echo htmlspecialchars($mensagem_erro); ?>
+                <i class="fas fa-exclamation-circle"></i> <?php echo $mensagem_erro; ?>
             </div>
         <?php endif; ?>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number"><?php echo count($usuarios); ?></div>
-                <div class="stat-label">Total de Usuários</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number"><?php echo count(array_filter($usuarios, function($u) { return $u['user_type'] === 'admin'; })); ?></div>
-                <div class="stat-label">Administradores</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number"><?php echo count(array_filter($usuarios, function($u) { return $u['user_type'] === 'user'; })); ?></div>
-                <div class="stat-label">Usuários Comuns</div>
-            </div>
+
+        <!-- Filtros e Busca -->
+        <div class="filtros-container">
+            <form method="GET" class="filtros-form">
+                <div class="filtro-group">
+                    <label for="buscar"><i class="fas fa-search"></i> Buscar:</label>
+                    <input type="text" id="buscar" name="buscar" 
+                           value="<?php echo htmlspecialchars($termo_busca); ?>"
+                           placeholder="Nome, email ou CPF...">
+                </div>
+                
+                <div class="filtro-group">
+                    <label for="tipo"><i class="fas fa-filter"></i> Filtrar por tipo:</label>
+                    <select id="tipo" name="tipo" onchange="this.form.submit()">
+                        <option value="todos" <?php echo $filtro_tipo === 'todos' || empty($filtro_tipo) ? 'selected' : ''; ?>>Todos os tipos</option>
+                        <option value="admin" <?php echo $filtro_tipo === 'admin' ? 'selected' : ''; ?>>Administradores</option>
+                        <option value="comum" <?php echo $filtro_tipo === 'comum' ? 'selected' : ''; ?>>Usuários Comuns</option>
+                    </select>
+                </div>
+                
+                <div class="filtro-actions">
+                    <button type="submit" class="btn btn-search">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <a href="admin_usuarios.php" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Limpar
+                    </a>
+                </div>
+            </form>
         </div>
 
-        <div class="users-section">
+        <!-- Resultados da Busca -->
+        <?php if (!empty($termo_busca) || !empty($filtro_tipo)): ?>
+            <div class="search-results">
+                <p>
+                    <i class="fas fa-info-circle"></i> 
+                    Encontrados <strong><?php echo count($usuarios_filtrados); ?></strong> usuário(s)
+                    <?php if (!empty($termo_busca)): ?>
+                        para "<strong><?php echo htmlspecialchars($termo_busca); ?></strong>"
+                    <?php endif; ?>
+                    <?php if (!empty($filtro_tipo) && $filtro_tipo !== 'todos'): ?>
+                        do tipo <strong><?php echo htmlspecialchars($filtro_tipo); ?></strong>
+                    <?php endif; ?>
+                </p>
+            </div>
+        <?php endif; ?>
+
+        <!-- Tabela de Usuários -->
+        <div class="usuarios-section">
             <div class="section-header">
-                <h3>Lista de Usuários</h3>
-                <form method="GET" class="search-box">
-                    <input type="text"
-                        class="search-input"
-                        name="buscar"
-                        placeholder="Buscar por nome, email ou usuário..."
-                        value="<?php echo htmlspecialchars($termo_busca); ?>">
-                    <button type="submit" class="btn-search">🔍</button>
-                </form>
+                <h2><i class="fas fa-list"></i> Lista de Usuários</h2>
+                <div class="section-info">
+                    <span class="total-registros">
+                        <i class="fas fa-database"></i> 
+                        <?php echo count($usuarios_filtrados); ?> registros
+                    </span>
+                </div>
             </div>
 
             <?php if (empty($usuarios_filtrados)): ?>
                 <div class="empty-state">
-                    <h3>
-                        <?php if (!empty($termo_busca)): ?>
-                            Nenhum usuário encontrado para "<?php echo htmlspecialchars($termo_busca); ?>"
-                        <?php else: ?>
-                            Nenhum usuário cadastrado
-                        <?php endif; ?>
-                    </h3>
+                    <div class="empty-icon">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <h3>Nenhum usuário encontrado</h3>
                     <p>
-                        <?php if (!empty($termo_busca)): ?>
-                            Nenhum usuário foi encontrado com esses termos.
+                        <?php if (!empty($termo_busca) || !empty($filtro_tipo)): ?>
+                            Nenhum usuário corresponde aos critérios de busca.
                         <?php else: ?>
-                            Comece cadastrando o primeiro usuário no sistema.
+                            Não há usuários cadastrados no sistema.
                         <?php endif; ?>
                     </p>
-                    <?php if (empty($termo_busca)): ?>
-                        <a href="cadastrousuario.php" class="btn btn-primary">Cadastrar Primeiro Usuário</a>
-                    <?php endif; ?>
+                    <a href="admin_usuarios.php" class="btn btn-primary">
+                        <i class="fas fa-redo"></i> Limpar Filtros
+                    </a>
                 </div>
             <?php else: ?>
-                <?php if (!empty($termo_busca)): ?>
-                    <div class="search-results-info">
-                        <p>Encontrados <strong><?php echo count($usuarios_filtrados); ?></strong> usuário(s) para "<?php echo htmlspecialchars($termo_busca); ?>"</p>
-                    </div>
-                <?php endif; ?>
-
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>Usuário</th>
-                            <th>Informações</th>
-                            <th>Idade</th>
-                            <th>Tipo</th>
-                            <th>Data de Cadastro</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($usuarios_filtrados as $usuario): ?>
+                <div class="table-responsive">
+                    <table class="usuarios-table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar <?php echo $usuario['user_type']; ?>">
-                                            <?php echo strtoupper(substr($usuario['nome'], 0, 1)); ?>
+                                <th>ID</th>
+                                <th>Usuário</th>
+                                <th>Contato</th>
+                                <th>Data de Nascimento</th>
+                                <th>Tipo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($usuarios_filtrados as $usuario): 
+                                $isCurrentUser = $usuario['id_pk'] == $_SESSION['usuario']['id'];
+                            ?>
+                                <tr class="<?php echo $isCurrentUser ? 'current-user' : ''; ?>">
+                                    <td class="user-id">#<?php echo $usuario['id_pk']; ?></td>
+                                    
+                                    <td class="user-info">
+                                        <div class="user-avatar">
+                                            <i class="fas fa-user-circle"></i>
                                         </div>
                                         <div class="user-details">
-                                            <h4>
-                                                <?php echo htmlspecialchars($usuario['nome']); ?>
-                                                <?php if ($usuario['user_type'] === 'admin'): ?>
-                                                    <span class="admin-tag">ADMIN</span>
-                                                <?php endif; ?>
-                                            </h4>
-                                            <p>@<?php echo htmlspecialchars($usuario['username']); ?></p>
+                                            <h4><?php echo htmlspecialchars($usuario['nome']); ?></h4>
+                                            <p class="user-cpf">CPF: <?php echo htmlspecialchars($usuario['cpf']); ?></p>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?><br>
-                                    <strong>CPF:</strong> <?php echo $usuario['cpf']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $usuario['idade']; ?> anos
-                                </td>
-                                <td>
-                                    <span class="user-type <?php echo $usuario['user_type']; ?>">
-                                        <?php
-                                        $tipos = [
-                                            'admin' => 'Administrador',
-                                            'user' => 'Usuário'
-                                        ];
-                                        echo $tipos[$usuario['user_type']] ?? 'Desconhecido';
-                                        ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <?php echo date('d/m/Y H:i', strtotime($usuario['data_criacao'])); ?>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="editar_usuario.php?id=<?php echo $usuario['id']; ?>" class="btn btn-edit">
-                                            ✏️ Editar
-                                        </a>
-                                        
-                                        <?php if ($usuario['user_type'] === 'admin'): ?>
-                                            <?php if ($usuario['id'] != 1): ?>
-                                                <a href="admin_usuarios.php?remover_admin=<?php echo $usuario['id']; ?><?php echo !empty($termo_busca) ? '&buscar=' . urlencode($termo_busca) : ''; ?>"
-                                                    class="btn btn-warning"
-                                                    onclick="return confirm('Tem certeza que deseja remover os privilégios de administrador de <?php echo htmlspecialchars($usuario['nome']); ?>?')">
-                                                    👑 Remover Admin
-                                                </a>
+                                    </td>
+                                    
+                                    <td class="user-contact">
+                                        <p><i class="fas fa-envelope"></i> <?php echo htmlspecialchars($usuario['email']); ?></p>
+                                    </td>
+                                    
+                                    <td class="user-birthdate">
+                                        <i class="fas fa-birthday-cake"></i> 
+                                        <?php echo htmlspecialchars($usuario['data_nasc_formatada'] ?? $usuario['dataNascimento']); ?>
+                                    </td>
+                                    
+                                    <td class="user-type">
+                                        <span class="badge badge-<?php echo $usuario['tipo']; ?>">
+                                            <i class="fas fa-<?php echo $usuario['tipo'] === 'admin' ? 'crown' : ($usuario['tipo'] === 'organizador' ? 'calendar-plus' : 'user'); ?>"></i>
+                                            <?php echo htmlspecialchars(ucfirst($usuario['tipo'])); ?>
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="user-actions">
+                                        <div class="action-buttons">
+                                            <!-- Form para alterar tipo -->
+                                            <form method="POST" class="action-form">
+                                                <input type="hidden" name="usuario_id" value="<?php echo $usuario['id_pk']; ?>">
+                                                <input type="hidden" name="acao" value="alterar_tipo">
+                                                
+                                                <select name="novo_tipo" class="type-select" onchange="this.form.submit()" <?php echo $isCurrentUser ? 'disabled' : ''; ?>>
+                                                    <option value="comum" <?php echo $usuario['tipo'] === 'comum' ? 'selected' : ''; ?>>Comum</option>
+                                                    <option value="admin" <?php echo $usuario['tipo'] === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                                                </select>
+                                            </form>
+                                            
+                                            <!-- Botão Excluir -->
+                                            <?php if (!$isCurrentUser): ?>
+                                                <form method="POST" class="action-form" 
+                                                      onsubmit="return confirm('Tem certeza que deseja excluir o usuário \\'<?php echo addslashes($usuario['nome']); ?>\\'? Esta ação não pode ser desfeita!');">
+                                                    <input type="hidden" name="usuario_id" value="<?php echo $usuario['id_pk']; ?>">
+                                                    <input type="hidden" name="acao" value="excluir_usuario">
+                                                    <button type="submit" class="btn btn-delete">
+                                                        <i class="fas fa-trash"></i> Excluir
+                                                    </button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span class="current-user-label">Você</span>
                                             <?php endif; ?>
-                                        <?php else: ?>
-                                            <a href="admin_usuarios.php?tornar_admin=<?php echo $usuario['id']; ?><?php echo !empty($termo_busca) ? '&buscar=' . urlencode($termo_busca) : ''; ?>"
-                                                class="btn btn-admin"
-                                                onclick="return confirm('Tem certeza que deseja tornar <?php echo htmlspecialchars($usuario['nome']); ?> administrador?')">
-                                                👑 Tornar Admin
-                                            </a>
-                                        <?php endif; ?>
-
-                                        <?php if ($usuario['id'] == 1): ?>
-                                            <button class="btn btn-disabled" disabled>
-                                                🚫 Excluir
-                                            </button>
-                                        <?php else: ?>
-                                            <a href="admin_usuarios.php?excluir=<?php echo $usuario['id']; ?><?php echo !empty($termo_busca) ? '&buscar=' . urlencode($termo_busca) : ''; ?>"
-                                                class="btn btn-delete"
-                                                onclick="return confirm('Tem certeza que deseja excluir o usuário <?php echo htmlspecialchars($usuario['nome']); ?>? Esta ação não pode ser desfeita!')">
-                                                🗑️ Excluir
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
 
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; <?php echo date('Y'); ?> Sistema de Eventos - Painel Administrativo. Todos os direitos reservados.</p>
+        <!-- Links de navegação -->
+        <div class="admin-navigation">
+            <a href="admin_usuarios.php" class="btn btn-admin">
+                <i class="fas fa-arrow-left"></i> Voltar ao Painel Admin
+            </a>
+            <a href="index.php" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Ir para Início
+            </a>
         </div>
-    </footer>
+    </div>
 </body>
 </html>
