@@ -3,12 +3,12 @@ session_start();
 require_once 'config.php';
 
 // Verificar se é admin
-if (!isset($_SESSION['usuario']) || !isAdmin()) {
+if (!isset($_SESSION['usuario']) || ($_SESSION['usuario']['tipo'] ?? '') !== 'admin') {
     header('Location: index.php');
     exit();
 }
 
-// Buscar todos os eventos do banco com informações do usuário
+// Função para buscar todos os eventos do banco com informações do usuário
 function getTodosEventosAdmin() {
     global $pdo;
     
@@ -24,7 +24,8 @@ function getTodosEventosAdmin() {
                 e.tipoEvento,
                 e.responsavel,
                 e.banner,
-                e.data_criacao,
+                e.categoria_fk,
+                e.usuario_fk,
                 c.titulo as categoria_titulo,
                 u.nome as usuario_nome,
                 u.email as usuario_email
@@ -85,15 +86,24 @@ if (isset($_GET['excluir'])) {
     $id_excluir = intval($_GET['excluir']);
     
     try {
-        // Primeiro exclui os favoritos associados
-        $stmt = $pdo->prepare("DELETE FROM favorito WHERE evento_fk = ?");
+        // Primeiro verifica se o evento existe e pega o título
+        $stmt = $pdo->prepare("SELECT titulo FROM evento WHERE id_pk = ?");
         $stmt->execute([$id_excluir]);
+        $evento = $stmt->fetch();
         
-        // Depois exclui o evento
-        $stmt = $pdo->prepare("DELETE FROM evento WHERE id_pk = ?");
-        $stmt->execute([$id_excluir]);
-        
-        $mensagem_sucesso = "Evento #{$id_excluir} excluído com sucesso!";
+        if ($evento) {
+            // Primeiro exclui os favoritos associados
+            $stmt = $pdo->prepare("DELETE FROM favorito WHERE evento_fk = ?");
+            $stmt->execute([$id_excluir]);
+            
+            // Depois exclui o evento
+            $stmt = $pdo->prepare("DELETE FROM evento WHERE id_pk = ?");
+            $stmt->execute([$id_excluir]);
+            
+            $mensagem_sucesso = "Evento '{$evento['titulo']}' (ID: #{$id_excluir}) excluído com sucesso!";
+        } else {
+            $mensagem_erro = "Evento não encontrado!";
+        }
     } catch (PDOException $e) {
         error_log("Erro ao excluir evento: " . $e->getMessage());
         $mensagem_erro = "Erro ao excluir evento: " . $e->getMessage();
@@ -113,7 +123,8 @@ if (!empty($termo_busca)) {
         return stripos($evento['titulo'], $termo_busca) !== false || 
                stripos($evento['local'], $termo_busca) !== false ||
                stripos($evento['responsavel'], $termo_busca) !== false ||
-               stripos($evento['usuario_nome'], $termo_busca) !== false;
+               stripos($evento['tipoEvento'], $termo_busca) !== false ||
+               (!empty($evento['usuario_nome']) && stripos($evento['usuario_nome'], $termo_busca) !== false);
     });
 }
 ?>
@@ -135,7 +146,7 @@ if (!empty($termo_busca)) {
         <div class="admin-header">
             <h1><i class="fas fa-calendar-alt"></i> Gerenciador de Eventos</h1>
             <p>Painel administrativo - Gerencie todos os eventos do sistema</p>
-            <p class="admin-logado">Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario']['nome']); ?></strong></p>
+            <p class="admin-logado">Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario']['nome'] ?? 'Admin'); ?></strong> (Administrador)</p>
         </div>
 
         <!-- Mensagens -->
@@ -151,29 +162,6 @@ if (!empty($termo_busca)) {
             </div>
         <?php endif; ?>
 
-        <!-- Estatísticas -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fas fa-calendar-alt"></i>
-                <div class="stat-number"><?php echo $estatisticas['total']; ?></div>
-                <div class="stat-label">Total de Eventos</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-calendar-check"></i>
-                <div class="stat-number"><?php echo $estatisticas['futuros']; ?></div>
-                <div class="stat-label">Eventos Futuros</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-history"></i>
-                <div class="stat-number"><?php echo $estatisticas['passados']; ?></div>
-                <div class="stat-label">Eventos Realizados</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-chart-pie"></i>
-                <div class="stat-number"><?php echo count($estatisticas['por_categoria']); ?></div>
-                <div class="stat-label">Categorias Ativas</div>
-            </div>
-        </div>
 
         <!-- Filtros e Busca -->
         <div class="filtros-container">
@@ -267,7 +255,7 @@ if (!empty($termo_busca)) {
                                         <div class="evento-details">
                                             <h4><?php echo htmlspecialchars($evento['titulo']); ?></h4>
                                             <p class="evento-id">ID: #<?php echo $evento['id_pk']; ?></p>
-                                            <?php if ($evento['categoria_titulo']): ?>
+                                            <?php if (!empty($evento['categoria_titulo'])): ?>
                                                 <p class="evento-categoria">
                                                     <i class="fas fa-tag"></i> 
                                                     <?php echo htmlspecialchars($evento['categoria_titulo']); ?>
@@ -311,23 +299,27 @@ if (!empty($termo_busca)) {
                                     </td>
                                     
                                     <td class="evento-criador">
-                                        <?php if ($evento['usuario_nome']): ?>
+                                        <?php if (!empty($evento['usuario_nome'])): ?>
                                             <p><i class="fas fa-user"></i> 
                                                 <?php echo htmlspecialchars($evento['usuario_nome']); ?>
                                             </p>
-                                            <p class="criador-email">
-                                                <i class="fas fa-envelope"></i> 
-                                                <?php echo htmlspecialchars($evento['usuario_email']); ?>
-                                            </p>
+                                            <?php if (!empty($evento['usuario_email'])): ?>
+                                                <p class="criador-email">
+                                                    <i class="fas fa-envelope"></i> 
+                                                    <?php echo htmlspecialchars($evento['usuario_email']); ?>
+                                                </p>
+                                            <?php endif; ?>
                                         <?php else: ?>
-                                            <span class="sem-criador">Usuário removido</span>
+                                            <span class="sem-criador">
+                                                <i class="fas fa-user-slash"></i> Usuário não encontrado
+                                            </span>
                                         <?php endif; ?>
                                     </td>
                                     
                                     <td class="evento-actions">
                                         <div class="action-buttons">
-                                            <a href="visualizar_evento.php?id=<?php echo $evento['id_pk']; ?>" 
-                                               class="btn btn-view" title="Visualizar">
+                                            <a href="evento.php?id=<?php echo $evento['id_pk']; ?>" 
+                                               class="btn btn-view" title="Visualizar" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             
@@ -338,7 +330,7 @@ if (!empty($termo_busca)) {
                                             
                                             <a href="admin_eventos.php?excluir=<?php echo $evento['id_pk']; ?><?php echo !empty($termo_busca) ? '&buscar=' . urlencode($termo_busca) : ''; ?>"
                                                class="btn btn-delete" 
-                                               title="Excluir"
+                                               title="Excluir Evento"
                                                onclick="return confirm('Tem certeza que deseja excluir o evento \\'<?php echo addslashes($evento['titulo']); ?>\\'? Esta ação não pode ser desfeita!');">
                                                 <i class="fas fa-trash"></i>
                                             </a>

@@ -113,6 +113,10 @@ if (isset($_SESSION['usuario'])) {
                     <i class="fas fa-user-plus"></i> Cadastrar nova conta
                 </a>
 
+                <a href="index.php" class="register-btn">
+                    Voltar para Página Principal
+                </a>
+
             </form>
 
             <div class="login-footer">

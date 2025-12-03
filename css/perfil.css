@@ -1,0 +1,601 @@
+/* ===== PERFIL DO USUÁRIO ===== */
+
+.perfil-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header do Perfil */
+.perfil-header {
+    background: linear-gradient(135deg, #02416D 0%, #02416D 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(2, 65, 109, 0.2);
+}
+
+.perfil-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,0 Q500,100 1000,0 L1000,100 L0,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+    background-size: 100% 100px;
+    background-position: bottom;
+    background-repeat: no-repeat;
+}
+
+.perfil-avatar {
+    width: 120px;
+    height: 120px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #02416D;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border: 4px solid rgba(255,255,255,0.3);
+}
+
+.perfil-info {
+    position: relative;
+    z-index: 1;
+}
+
+.perfil-nome {
+    font-size: 2em;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.perfil-email {
+    font-size: 1.1em;
+    opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+.tipo-usuario {
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.perfil-stats {
+    display: flex;
+    gap: 30px;
+    margin-top: 25px;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 10px;
+    min-width: 80px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    color: white;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #CDD071;
+}
+
+/* Layout do Conteúdo */
+.perfil-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .perfil-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .perfil-header {
+        padding: 25px;
+    }
+    
+    .perfil-stats {
+        gap: 15px;
+    }
+    
+    .stat-item {
+        min-width: 70px;
+    }
+}
+
+/* Cards de Informação */
+.info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(2, 65, 109, 0.08);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-top: 5px solid #02416D;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(2, 65, 109, 0.12);
+}
+
+.info-card h3 {
+    color: #02416D;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3em;
+}
+
+.info-card h3 i {
+    color: #02416D;
+    width: 24px;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #02416D;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+    background: #fafafa;
+    border: 2px solid #e9ecef;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #02416D;
+    box-shadow: 0 0 0 3px rgba(2, 65, 109, 0.1);
+    background: white;
+}
+
+/* Botões */
+.btn-voltar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.btn-voltar:hover {
+    background: rgba(205, 208, 113, 0.3);
+    color: white;
+}
+
+.btn-salvar {
+    background: #02416D;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-salvar:hover {
+    background: #0268A6;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(2, 65, 109, 0.3);
+}
+
+/* Alterar Senha */
+.alterar-senha-details {
+    margin-top: 20px;
+}
+
+.alterar-senha-details summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.alterar-senha-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.btn-alterar-senha {
+    background: transparent;
+    color: #02416D;
+    border: 2px solid #02416D;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-alterar-senha:hover {
+    background: #02416D;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(2, 65, 109, 0.3);
+}
+
+.senha-fields {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    animation: fadeIn 0.3s;
+    border-left: 4px solid #CDD071;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Grid de Informações */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.info-item {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    border-left: 4px solid #CDD071;
+}
+
+.info-item:hover {
+    transform: translateY(-2px);
+    background: #e9ecef;
+}
+
+.info-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.1em;
+    color: #02416D;
+    font-weight: 600;
+}
+
+/* Badges de Tipo */
+.tipo-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.tipo-badge i {
+    margin-right: 5px;
+}
+
+.tipo-admin {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.tipo-comum {
+    background: rgba(205, 208, 113, 0.1);
+    color: #02416D;
+    border: 1px solid rgba(205, 208, 113, 0.2);
+}
+
+/* Seções */
+.section-title {
+    color: #02416D;
+    margin: 30px 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+}
+
+/* Ações da Conta */
+.acoes-conta {
+    display: grid;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-acao {
+    display: block;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-favoritos {
+    background: rgba(205, 208, 113, 0.1);
+    color: #02416D;
+    border: 2px solid #CDD071;
+}
+
+.btn-favoritos:hover {
+    background: #CDD071;
+    color: #02416D;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(205, 208, 113, 0.3);
+}
+
+.btn-eventos {
+    background: rgba(2, 65, 109, 0.1);
+    color: #02416D;
+    border: 2px solid #02416D;
+}
+
+.btn-eventos:hover {
+    background: #02416D;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(2, 65, 109, 0.3);
+}
+
+.btn-admin {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border: 2px solid #ff6b6b;
+}
+
+.btn-admin:hover {
+    background: #ff6b6b;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-sair {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+    border: 2px solid #6c757d;
+}
+
+.btn-sair:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+}
+
+/* Mensagens de Alerta */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    position: relative;
+    animation: slideDown 0.5s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-left: 4px solid;
+}
+
+.alert i {
+    font-size: 1.2em;
+    margin-top: 2px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    color: #155724;
+    border-left-color: #28a745;
+}
+
+.alert-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    color: #721c24;
+    border-left-color: #dc3545;
+}
+
+.alert-success i {
+    color: #28a745;
+}
+
+.alert-error i {
+    color: #dc3545;
+}
+
+/* Responsividade adicional */
+@media (max-width: 480px) {
+    .perfil-container {
+        padding: 10px;
+    }
+    
+    .perfil-header {
+        padding: 20px;
+    }
+    
+    .perfil-avatar {
+        width: 90px;
+        height: 90px;
+        font-size: 36px;
+    }
+    
+    .perfil-nome {
+        font-size: 1.5em;
+    }
+    
+    .info-card {
+        padding: 20px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .perfil-stats {
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .stat-item {
+        min-width: 60px;
+    }
+    
+    .stat-number {
+        font-size: 1.5em;
+    }
+}
+
+/* Animações */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.info-card:hover h3 i {
+    animation: pulse 1.5s infinite;
+}
+
+/* Acessibilidade */
+.btn:focus,
+.btn-alterar-senha:focus,
+.form-control:focus {
+    outline: 3px solid rgba(205, 208, 113, 0.5);
+    outline-offset: 2px;
+}
+
+/* Ícones dentro do formulário */
+.form-group label i {
+    color: #CDD071;
+    width: 18px;
+}
+
+/* Detalhes para alterar senha */
+.alterar-senha-details[open] .btn-alterar-senha {
+    background: #02416D;
+    color: white;
+}
+
+.alterar-senha-details[open] .btn-alterar-senha i {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+/* Efeito de brilho nos cards */
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #02416D 0%, #CDD071 100%);
+    border-radius: 15px 15px 0 0;
+}
+
+/* Estilo para o botão de voltar no hover */
+.btn-voltar:hover i {
+    transform: translateX(-3px);
+    transition: transform 0.3s;
+}
