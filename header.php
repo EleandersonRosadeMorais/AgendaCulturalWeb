@@ -34,7 +34,7 @@ require_once 'config.php';
                         
                         <?php if (isset($_SESSION['usuario'])): ?>
                             <!-- Menu para usuários logados -->
-                            <li><a href="cadastroEvento.php"><i class="fas fa-plus-circle"></i> Criar Evento</a></li>
+                           
                             
                             <!-- MOSTRAR "Favoritos" APENAS PARA USUÁRIOS COMUNS (NÃO ADMIN) -->
                             <?php if (!isAdmin()): ?>
@@ -59,6 +59,10 @@ require_once 'config.php';
                                      
                                     <?php if (isAdmin()): ?>
                                         <li><a href="admin_eventos.php"><i class="fas fa-cog"></i> Gerenciador Eventos</a></li>
+                                    <?php endif; ?>
+
+                                    <?php if (isAdmin()): ?>
+                                        <li><a href="cadastroEvento.php"> + Adicionar Eventos</a></li>
                                     <?php endif; ?>
                                     
                                     <li><hr class="dropdown-divider"></li>
