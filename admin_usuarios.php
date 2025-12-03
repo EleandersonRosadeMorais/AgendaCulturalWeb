@@ -318,11 +318,15 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
 
         <!-- Links de navegação -->
         <div class="admin-navigation">
-            <a href="admin_usuarios.php" class="btn btn-admin">
-                <i class="fas fa-arrow-left"></i> Voltar ao Painel Admin
+            <a href="index.php" class="btn btn-admin">
+                <i class="fas fa-arrow-left"></i> Voltar a Página Principal
             </a>
             <a href="index.php" class="btn btn-secondary">
                 <i class="fas fa-home"></i> Ir para Início
+            </a>
+
+            <a href="admin_eventos.php" class="btn btn-secondary">
+                <i class="fas fa-tasks"></i>  Gerenciador Eventos
             </a>
         </div>
     </div>
