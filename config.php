@@ -20,36 +20,53 @@ function getEventoById($id) {
     global $pdo;
     
     try {
+        // Primeiro, testar query mais simples
+        error_log("DEBUG: Buscando evento ID $id");
+        
         $stmt = $pdo->prepare("
             SELECT 
-                e.id_pk as id,
-                e.titulo,
-                e.data,
-                e.hora,
-                e.local,
-                e.descricao,
-                e.tipoEvento as tipo,
-                e.responsavel,
-                e.banner,
-                e.data_criacao,
-                e.categoria_fk,
-                e.usuario_fk,
+                e.*,
                 c.titulo as categoria_titulo
             FROM evento e 
             LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
             WHERE e.id_pk = ?
         ");
+        
+        if (!$stmt) {
+            error_log("Erro ao preparar statement: " . print_r($pdo->errorInfo(), true));
+            return false;
+        }
+        
         $stmt->execute([$id]);
         $evento = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        return $evento ? $evento : false;
+        if ($evento) {
+            error_log("DEBUG: Evento encontrado - " . $evento['titulo']);
+            
+            // Se encontrou o evento, buscar dados do usuário separadamente
+            if (!empty($evento['usuario_fk'])) {
+                $stmt2 = $pdo->prepare("SELECT nome, email FROM usuario WHERE id_pk = ?");
+                $stmt2->execute([$evento['usuario_fk']]);
+                $usuario = $stmt2->fetch(PDO::FETCH_ASSOC);
+                
+                if ($usuario) {
+                    $evento['usuario_nome'] = $usuario['nome'];
+                    $evento['usuario_email'] = $usuario['email'];
+                }
+            }
+            
+            return $evento;
+        } else {
+            error_log("DEBUG: Evento ID $id não encontrado");
+            return false;
+        }
         
     } catch (PDOException $e) {
-        error_log("Erro ao buscar evento: " . $e->getMessage());
+        error_log("ERRO na função getEventoById: " . $e->getMessage());
+        error_log("Query: SELECT e.*, c.titulo as categoria_titulo FROM evento e LEFT JOIN categoria c ON e.categoria_fk = c.id_pk WHERE e.id_pk = $id");
         return false;
     }
 }
-
 // Função para buscar eventos futuros
 function getEventosFuturos() {
     global $pdo;

@@ -349,9 +349,6 @@ if (!empty($termo_busca)) {
             <a href="admin_usuarios.php" class="btn btn-admin">
                 <i class="fas fa-users-cog"></i> Gerenciar Usuários
             </a>
-            <a href="admin.php" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Voltar ao Painel Admin
-            </a>
             <a href="index.php" class="btn btn-secondary">
                 <i class="fas fa-home"></i> Ir para Início
             </a>

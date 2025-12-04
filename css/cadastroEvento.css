@@ -1,9 +1,17 @@
 /* ===== CADASTRO DE EVENTO ===== */
 
+/* CORREÇÃO: FONTE GLOBAL PARA TODO O FORMULÁRIO */
+body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h5, h6 {
+    font-family: Arial, sans-serif !important;
+    font-size: 16px !important;
+}
+
 .register-container {
     max-width: 900px;
     margin: 0 auto;
     padding: 30px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .register-card {
@@ -12,15 +20,19 @@
     box-shadow: 0 10px 30px rgba(2, 65, 109, 0.2);
     overflow: hidden;
     border-top: 5px solid #02416D;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
-/* Header do cadastro */
+/* Header do cadastro - CORRIGIDO */
 .register-header {
     background: linear-gradient(135deg, #02416D 0%, #0268A6 100%);
     color: white;
     padding: 40px;
     text-align: center;
     position: relative;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .register-header::before {
@@ -34,23 +46,44 @@
 }
 
 .register-header h1 {
-    font-size: 2.2rem;
+    font-size: 32px; /* 2.2rem convertido para px */
     margin-bottom: 10px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
+    font-family: Arial, sans-serif;
 }
 
 .register-header h1 i {
     color: #CDD071;
-    font-size: 2.5rem;
+    font-size: 40px; /* 2.5rem convertido para px */
 }
 
+/* CORREÇÃO: Estilização dos parágrafos */
 .register-header p {
     margin: 8px 0;
     opacity: 0.9;
+    font-size: 16px; /* 1rem = 16px */
+    line-height: 1.5;
+    font-family: Arial, sans-serif;
+}
+
+/* CORREÇÃO: Usuário info */
+.register-header p:has(i.fa-user) {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    margin: 10px auto;
+    font-size: 15.2px; /* 0.95rem convertido para px */
+    font-family: Arial, sans-serif;
+}
+
+.register-header p:has(i.fa-user) i {
+    color: #CDD071;
+    margin-right: 8px;
 }
 
 .admin-badge {
@@ -59,13 +92,34 @@
     color: #CDD071;
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 0.9em;
+    font-size: 14.4px; /* 0.9em convertido para px */
     margin-top: 10px;
     border: 1px solid rgba(205, 208, 113, 0.3);
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+}
+
+.admin-badge i {
+    color: #CDD071 !important;
+    margin-right: 8px;
 }
 
 .text-danger {
-    color: #dc3545 !important;
+    color: #ff6b6b !important;
+    font-weight: 600;
+    display: block;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #ff6b6b;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.text-danger i {
+    margin-right: 8px;
+    color: #ff6b6b !important;
 }
 
 /* Mensagens de feedback */
@@ -80,27 +134,27 @@
     align-items: flex-start;
     gap: 15px;
     animation: fadeIn 0.5s;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .success-message i {
     color: #28a745;
-    font-size: 1.5em;
+    font-size: 24px; /* 1.5em convertido para px */
     margin-top: 2px;
 }
 
-.redirect-message {
-    margin-top: 10px;
-    opacity: 0.8;
-}
-
 .error-message {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
+    background-color: #ffe3e3;
+    border: 1px solid #ffc9c9;
+    color: #c92a2a;
     padding: 20px;
     border-radius: 8px;
     margin: 20px 40px;
     animation: fadeIn 0.5s;
+    border-left: 4px solid #ff6b6b;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .error-header {
@@ -108,20 +162,26 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
+    font-size: 17.6px; /* 1.1em convertido para px */
+    font-family: Arial, sans-serif;
 }
 
 .error-header i {
-    color: #dc3545;
-    font-size: 1.2em;
+    color: #ff6b6b;
+    font-size: 20.8px; /* 1.3em convertido para px */
 }
 
 .error-message ul {
     margin: 0;
     padding-left: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .error-message li {
     margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 @keyframes fadeIn {
@@ -138,6 +198,8 @@
 /* Formulário */
 .register-form {
     padding: 40px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .form-row {
@@ -157,20 +219,25 @@
 .form-group {
     display: flex;
     flex-direction: column;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin-left: 10px;
 }
 
 .form-group.full-width {
     grid-column: 1 / -1;
 }
 
+/* CORREÇÃO: Labels */
 .form-group label {
     color: #02416D;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.95rem;
+    font-size: 15.2px; 
+    font-family: Arial, sans-serif;
 }
 
 .form-group label i {
@@ -179,20 +246,22 @@
     color: #CDD071;
 }
 
-/* Campos de entrada */
+
 input[type="text"],
 input[type="date"],
 input[type="time"],
 textarea,
 .form-select {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e9ecef;
+    padding: 14px 15px;
+    border: 2px solid #e0e6ed;
     border-radius: 8px;
     font-size: 16px;
     transition: all 0.3s;
     background: #f8f9fa;
-    font-family: inherit;
+    font-family: Arial, sans-serif;
+    color: #333;
+
 }
 
 input[type="text"]:focus,
@@ -202,39 +271,87 @@ textarea:focus,
 .form-select:focus {
     outline: none;
     border-color: #02416D;
-    box-shadow: 0 0 0 3px rgba(2, 65, 109, 0.1);
+    box-shadow: 0 0 0 3px rgba(2, 65, 109, 0.15);
     background: white;
+    
 }
 
 textarea {
     resize: vertical;
     min-height: 120px;
+    line-height: 1.5;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
-/* Campos com erro */
+/* CORREÇÃO: Placeholder visível */
+::placeholder {
+    color: #6c757d !important;
+    opacity: 0.7 !important;
+    font-size: 15.2px; /* 0.95em convertido para px */
+    font-family: Arial, sans-serif;
+}
+
+/* Estilo para selects */
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2302416D' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+    cursor: pointer;
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    
+}
+
+.form-select option {
+    color: #333;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+/* CORREÇÃO: Campos com erro */
 .input-error {
-    border-color: #dc3545 !important;
+    border-color: #ff6b6b !important;
+    background-color: #fff5f5 !important;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2) !important;
 }
 
 .error-text {
-    color: #dc3545;
+    color: #ff6b6b;
     display: block;
-    margin-top: 5px;
-    font-size: 0.875em;
+    margin-top: 8px;
+    font-size: 14px; /* 0.875em convertido para px */
     display: flex;
     align-items: center;
     gap: 5px;
+    font-family: Arial, sans-serif;
 }
 
-/* Upload de arquivo */
+.error-text i {
+    font-size: 14.4px; /* 0.9em convertido para px */
+}
+
+/* CORREÇÃO: Upload de arquivo */
 .file-upload-wrapper {
     margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .custom-file-button {
     background: #02416D;
     color: white;
-    padding: 12px 25px;
+    padding: 14px 25px;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
@@ -243,19 +360,20 @@ textarea {
     transition: all 0.3s;
     border: none;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 16px; /* 1rem convertido para px */
     position: relative;
+    font-family: Arial, sans-serif;
 }
 
 .custom-file-button:hover {
     background: #0268A6;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(2, 65, 109, 0.3);
 }
 
 .upload-icon {
     color: white;
-    font-size: 1.2em;
+    font-size: 19.2px; /* 1.2em convertido para px */
 }
 
 .file-input {
@@ -270,46 +388,54 @@ textarea {
 
 .file-name {
     display: block;
-    margin-top: 8px;
-    padding: 10px 15px;
-    background: #e9ecef;
+    margin-top: 12px;
+    padding: 12px 15px;
+    background: #f8f9fa;
     border-radius: 8px;
-    font-size: 0.9em;
+    font-size: 15.2px; /* 0.95em convertido para px */
     color: #495057;
-    border-left: 4px solid #CDD071;
+    border-left: 4px solid #02416D;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-family: Arial, sans-serif;
 }
 
 .file-name i {
     color: #02416D;
+    font-size: 17.6px; /* 1.1em convertido para px */
 }
 
 .file-help {
     display: block;
-    margin-top: 8px;
+    margin-top: 10px;
     color: #6c757d;
-    font-size: 0.875em;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    font-size: 14.4px; /* 0.9em convertido para px */
+    padding: 5px 0;
+    font-family: Arial, sans-serif;
 }
 
-/* Ações do formulário */
+.file-help i {
+    color: #02416D;
+    margin-right: 5px;
+}
+
+/* CORREÇÃO: Ações do formulário */
 .form-actions {
     display: flex;
     gap: 20px;
-    margin-top: 30px;
+    margin-top: 40px;
     padding-top: 30px;
     border-top: 2px solid #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .cadastrarEvento-btn {
     background: #02416D;
     color: white;
     border: none;
-    padding: 15px 30px;
+    padding: 16px 30px;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
@@ -320,11 +446,12 @@ textarea {
     justify-content: center;
     gap: 10px;
     flex: 1;
+    font-family: Arial, sans-serif;
 }
 
 .cadastrarEvento-btn:hover {
     background: #0268A6;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(2, 65, 109, 0.3);
 }
 
@@ -332,7 +459,7 @@ textarea {
     background: #CDD071;
     color: #02416D;
     border: none;
-    padding: 15px 30px;
+    padding: 16px 30px;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
@@ -345,114 +472,46 @@ textarea {
     flex: 1;
     text-decoration: none;
     text-align: center;
+    font-family: Arial, sans-serif;
 }
 
 .voltar-btn:hover {
     background: #e8ecaa;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(205, 208, 113, 0.3);
 }
 
-/* Acesso negado */
-.access-denied {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 40px;
-    text-align: center;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(2, 65, 109, 0.2);
-    border-top: 5px solid #02416D;
+/* CORREÇÃO: Indicadores obrigatórios */
+.form-group label.required::after,
+label[for]:has(+ input[required], + select[required], + textarea[required])::after {
+    content: ' *';
+    color: #ff6b6b;
+    font-weight: bold;
+    margin-left: 2px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
-.access-denied i {
-    font-size: 4em;
-    color: #dc3545;
-    margin-bottom: 20px;
+/* Fallback para navegadores que não suportam :has() */
+.form-group label::after {
+    content: ' *';
+    color: #ff6b6b;
+    font-weight: bold;
+    margin-left: 2px;
+    opacity: 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
-.access-denied h1 {
-    color: #02416D;
-    margin-bottom: 15px;
-    font-size: 2rem;
+.form-group:has(input[required]) label::after,
+.form-group:has(select[required]) label::after,
+.form-group:has(textarea[required]) label::after {
+    opacity: 1;
 }
 
-.access-denied p {
-    color: #666;
-    margin-bottom: 25px;
-    line-height: 1.6;
-    font-size: 1.1rem;
-}
-
-.user-info {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-    border-left: 4px solid #CDD071;
-    text-align: left;
-}
-
-.user-info p {
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #02416D;
-}
-
-.user-info i {
-    color: #02416D;
-    font-size: 1.2em;
-}
-
-.user-info strong {
-    color: #02416D;
-    font-weight: 600;
-}
-
-.btn-group {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-
-.btn-group .btn {
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    min-width: 150px;
-}
-
-.btn-group .btn-primary {
-    background: #02416D;
-    color: white;
-}
-
-.btn-group .btn-primary:hover {
-    background: #0268A6;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(2, 65, 109, 0.3);
-}
-
-.btn-group .btn-secondary {
-    background: #CDD071;
-    color: #02416D;
-}
-
-.btn-group .btn-secondary:hover {
-    background: #e8ecaa;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(205, 208, 113, 0.3);
+/* Remove do campo de banner (tem tratamento especial) */
+.form-group:has(#banner[required]) label::after {
+    opacity: 0;
 }
 
 /* Responsividade */
@@ -462,9 +521,7 @@ textarea {
     }
     
     .register-header h1 {
-        font-size: 1.8rem;
-        flex-direction: column;
-        gap: 10px;
+        font-size: 28.8px; /* 1.8rem convertido para px */
     }
     
     .register-form {
@@ -474,6 +531,7 @@ textarea {
     .success-message,
     .error-message {
         margin: 20px;
+        padding: 15px;
     }
     
     .form-actions {
@@ -481,12 +539,10 @@ textarea {
         gap: 15px;
     }
     
-    .btn-group {
-        flex-direction: column;
-    }
-    
-    .btn-group .btn {
-        width: 100%;
+    .cadastrarEvento-btn,
+    .voltar-btn {
+        padding: 14px 20px;
+        font-size: 16px;
     }
 }
 
@@ -496,39 +552,75 @@ textarea {
     }
     
     .register-header h1 {
-        font-size: 1.5rem;
+        font-size: 24px; /* 1.5rem convertido para px */
+    }
+    
+    .register-header p {
+        font-size: 14.4px; /* 0.9rem convertido para px */
+    }
+    
+    .admin-badge {
+        font-size: 12.8px; /* 0.8rem convertido para px */
+        padding: 6px 12px;
     }
     
     .register-form {
         padding: 20px;
     }
     
-    .cadastrarEvento-btn,
-    .voltar-btn {
-        padding: 12px 20px;
-        font-size: 0.95rem;
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea,
+    .form-select {
+        padding: 12px;
+        font-size: 16px; /* Mantido 16px mesmo no mobile */
     }
 }
 
-/* Indicadores obrigatórios */
-label[for]:has(+ input[required], + select[required], + textarea[required])::after,
-label[for]:has(+ .file-upload-wrapper input[required])::after {
-    content: ' *';
-    color: #dc3545;
-    font-weight: bold;
+/* CORREÇÃO: Para garantir que ícones FontAwesome apareçam */
+.fas, .far, .fab {
+    font-family: 'Font Awesome 6 Free', Arial, sans-serif !important;
 }
 
-/* Animações extras */
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.7;
-    }
+.fas::before, .far::before, .fab::before {
+    font-family: 'Font Awesome 6 Free', Arial, sans-serif !important;
 }
 
-.success-message i {
-    animation: pulse 1.5s infinite;
+/* CORREÇÃO: Garantir que o texto de "Todos os campos são obrigatórios" apareça */
+.register-header .text-danger {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #ff6b6b;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
+/* CORREÇÃO: Estilo para a linha divisória visual */
+.register-header hr {
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+    display: block;
+}
+
+/* REGRA ADICIONAL: Forçar Arial 16px em todos os elementos */
+* {
+    font-family: Arial, sans-serif !important;
+}
+
+body {
+    font-size: 16px !important;
+}
+
+/* Ajuste para elementos específicos que podem ter herança quebrada */
+button, input, select, textarea, a, span, div, p, label, small, strong, em {
+    font-family: Arial, sans-serif !important;
+    font-size: 16px !important;
+}
