@@ -114,7 +114,7 @@ if (!empty($termo_busca)) {
     $usuarios_filtrados = array_filter($usuarios, function($usuario) use ($termo_busca) {
         return stripos($usuario['nome'], $termo_busca) !== false || 
                stripos($usuario['email'], $termo_busca) !== false ||
-               stripos($usuario['cpf'], $termo_busta) !== false;
+               stripos($usuario['cpf'], $termo_busca) !== false;
     });
 }
 
