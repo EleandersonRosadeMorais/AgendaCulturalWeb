@@ -16,40 +16,6 @@ if (!isset($_GET['id'])) {
 
 $eventoId = intval($_GET['id']);
 
-// Buscar o evento do banco
-function getEventoByIdParaEdicao($id) {
-    global $pdo;
-    
-    try {
-        $stmt = $pdo->prepare("
-            SELECT 
-                e.id_pk,
-                e.titulo,
-                e.data,
-                e.hora,
-                e.local,
-                e.descricao,
-                e.tipoEvento,
-                e.responsavel,
-                e.banner,
-                e.categoria_fk,
-                e.usuario_fk,
-                c.titulo as categoria_titulo
-            FROM evento e 
-            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
-            WHERE e.id_pk = ?
-        ");
-        $stmt->execute([$id]);
-        $evento = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        return $evento ? $evento : false;
-        
-    } catch (PDOException $e) {
-        error_log("Erro ao buscar evento: " . $e->getMessage());
-        return false;
-    }
-}
-
 // Buscar todas as categorias
 function getCategorias() {
     global $pdo;
@@ -63,12 +29,12 @@ function getCategorias() {
     }
 }
 
-// Buscar o evento
-$evento = getEventoByIdParaEdicao($eventoId);
+// Usar a função que já existe no config.php (getEventoById)
+$evento = getEventoById($eventoId);
 $categorias = getCategorias();
 
 if (!$evento) {
-    $_SESSION['mensagem'] = 'Evento não encontrado!';
+    $_SESSION['mensagem'] = 'Evento não encontrado! (ID: ' . $eventoId . ')';
     $_SESSION['mensagem_tipo'] = 'erro';
     header('Location: admin_eventos.php');
     exit();
@@ -148,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $errors[] = 'Formato de imagem inválido. Use JPG, PNG ou GIF';
         }
-    } elseif ($_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE) {
+    } elseif (isset($_FILES['banner']) && $_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE) {
         $errors[] = 'Erro no upload da imagem: ' . $_FILES['banner']['error'];
     }
 
@@ -182,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $eventoId
             ]);
             
-            $success = 'Evento atualizado com sucesso!';
+            $success = '✅ Evento atualizado com sucesso!';
             
             // Atualizar os dados do evento na variável para exibir
             $evento['titulo'] = $titulo;
@@ -215,17 +181,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Evento - Agenda Cultural</title>
+    <title>Editar Evento #<?php echo $eventoId; ?> - Agenda Cultural</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/cadastroEvento.css">
-    <link rel="stylesheet" href="css/editar_evento.css">
+    <link rel="stylesheet" href="/AgendaCulturalWeb/css/editar_evento.css">
 </head>
 <body>
     <div class="register-container">
         <div class="register-card">
             <div class="admin-header">
                 <h1><i class="fas fa-edit"></i> Editar Evento</h1>
-                <p>Atualize os dados do evento #<?php echo $evento['id_pk']; ?></p>
+                <p>Atualize os dados do evento #<?php echo $eventoId; ?></p>
             </div>
             
             <?php if ($success): ?>
@@ -251,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full-width">
                         <label for="titulo">Título do Evento *</label>
                         <input type="text" id="titulo" name="titulo" 
-                               value="<?php echo htmlspecialchars($evento['titulo']); ?>" 
+                               value="<?php echo htmlspecialchars($evento['titulo'] ?? ''); ?>" 
                                placeholder="Digite o título do evento" required>
                     </div>
                 </div>
@@ -260,13 +225,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label for="data">Data *</label>
                         <input type="date" id="data" name="data" 
-                               value="<?php echo htmlspecialchars($evento['data']); ?>" required>
+                               value="<?php echo htmlspecialchars($evento['data'] ?? ''); ?>" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="hora">Hora *</label>
                         <input type="time" id="hora" name="hora" 
-                               value="<?php echo htmlspecialchars($evento['hora']); ?>" required>
+                               value="<?php echo htmlspecialchars($evento['hora'] ?? ''); ?>" required>
                     </div>
                 </div>
 
@@ -274,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label for="local">Local *</label>
                         <input type="text" id="local" name="local" 
-                               value="<?php echo htmlspecialchars($evento['local']); ?>" 
+                               value="<?php echo htmlspecialchars($evento['local'] ?? ''); ?>" 
                                placeholder="Local do evento" required>
                     </div>
                     
@@ -300,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full-width">
                         <label for="responsavel">Responsável *</label>
                         <input type="text" id="responsavel" name="responsavel" 
-                               value="<?php echo htmlspecialchars($evento['responsavel']); ?>" 
+                               value="<?php echo htmlspecialchars($evento['responsavel'] ?? ''); ?>" 
                                placeholder="Nome do responsável pelo evento" required>
                     </div>
                 </div>
@@ -325,23 +290,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="descricao">Descrição *</label>
                         <textarea id="descricao" name="descricao" 
                                   placeholder="Descreva o evento"
-                                  rows="6" required><?php echo htmlspecialchars($evento['descricao']); ?></textarea>
+                                  rows="6" required><?php echo htmlspecialchars($evento['descricao'] ?? ''); ?></textarea>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label for="banner">Banner do Evento</label>
-                        <input type="file" id="banner" name="banner" 
-                               accept="image/*" class="file-input">
-                        <small class="file-help">Formatos: JPG, PNG, GIF (Max: 2MB)</small>
+                        <div class="file-upload-wrapper">
+                            <span class="custom-file-button">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                Selecionar Novo Banner
+                                <input type="file" id="banner" name="banner" 
+                                       accept="image/*" 
+                                       class="file-input">
+                            </span>
+                            <small class="file-help">Formatos: JPG, PNG, GIF (Max: 2MB)</small>
+                        </div>
                         
                         <?php if (!empty($evento['banner'])): ?>
                             <div class="current-banner">
                                 <p><strong>Banner atual:</strong></p>
                                 <img src="<?php echo htmlspecialchars($evento['banner']); ?>" 
                                      alt="Banner atual" 
+                                     style="max-width: 300px; max-height: 150px; border-radius: 5px;"
                                      onerror="this.style.display='none';">
+                                <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                                    Deixe em branco para manter o banner atual
+                                </p>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -354,12 +330,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a href="admin_eventos.php" class="voltar-btn">
                         <i class="fas fa-arrow-left"></i> Voltar
                     </a>
-                </div>
-
-                <div class="event-info">
-                    <p><strong>ID do Evento:</strong> #<?php echo $evento['id_pk']; ?></p>
-                    <p><strong>Categoria Atual:</strong> <?php echo htmlspecialchars($evento['categoria_titulo'] ?? 'Sem categoria'); ?></p>
-                    <p><strong>Criado por:</strong> Usuário ID: <?php echo $evento['usuario_fk'] ?? 'Desconhecido'; ?></p>
                 </div>
             </form>
         </div>

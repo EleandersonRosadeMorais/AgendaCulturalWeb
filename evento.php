@@ -10,54 +10,18 @@ if (!isset($_GET['id'])) {
 
 $eventoId = intval($_GET['id']);
 
-// Buscar o evento do banco
-function getEventoCompleto($id) {
-    global $pdo;
-    
-    try {
-        $stmt = $pdo->prepare("
-            SELECT 
-                e.id_pk,
-                e.titulo,
-                e.data,
-                e.hora,
-                e.local,
-                e.descricao,
-                e.tipoEvento,
-                e.responsavel,
-                e.banner,
-                e.data_criacao,
-                e.categoria_fk,
-                e.usuario_fk,
-                c.titulo as categoria_titulo,
-                u.nome as usuario_nome,
-                u.email as usuario_email
-            FROM evento e 
-            LEFT JOIN categoria c ON e.categoria_fk = c.id_pk 
-            LEFT JOIN usuario u ON e.usuario_fk = u.id_pk 
-            WHERE e.id_pk = ?
-        ");
-        $stmt->execute([$id]);
-        $evento = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        return $evento ? $evento : false;
-        
-    } catch (PDOException $e) {
-        error_log("Erro ao buscar evento: " . $e->getMessage());
-        return false;
-    }
-}
-
-// Buscar o evento
-$evento = getEventoCompleto($eventoId);
+// Usar função que já existe no config.php
+$evento = getEventoById($eventoId);
 
 if (!$evento) {
+    $_SESSION['mensagem'] = "Evento não encontrado! (ID: $eventoId)";
+    $_SESSION['mensagem_tipo'] = 'erro';
     header('Location: index.php');
     exit();
 }
 
 // Verificar se é admin
-$isAdmin = isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo'] ?? '') === 'admin';
+$isAdmin = isAdmin();
 
 // Verificar se o usuário atual pode favoritar
 $usuarioAtual = getUsuarioAtual();
@@ -65,7 +29,7 @@ $podeFavoritar = $usuarioAtual && !$isAdmin;
 
 // Verificar se já é favorito
 $isFavorito = false;
-if ($podeFavoritar) {
+if ($podeFavoritar && $usuarioAtual) {
     $isFavorito = isEventoFavorito($eventoId);
 }
 
@@ -120,7 +84,7 @@ if (isset($_GET['excluir']) && $isAdmin) {
     }
 }
 
-// Dados para exibição
+// Dados para exibição (usando funções do config.php)
 $cor = getCorPorTipo($evento['tipoEvento']);
 $icone = getIconePorTipo($evento['tipoEvento']);
 $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
@@ -134,16 +98,27 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/evento.css">
+    <link rel="stylesheet" href="css/footer.css">
 </head>
 <body>
     <?php require_once 'header.php'; ?>
     
+    <!-- Mensagens fixas (sem JavaScript) -->
+    <?php if (isset($_SESSION['mensagem'])): ?>
+        <div class="container">
+            <div class="mensagem-fixa <?php echo $_SESSION['mensagem_tipo'] === 'erro' ? 'erro' : ''; ?>">
+                <?php echo $_SESSION['mensagem']; ?>
+                <?php unset($_SESSION['mensagem']); ?>
+                <?php unset($_SESSION['mensagem_tipo']); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    
     <!-- Banner do evento -->
-    <div class="evento-banner">
+    <div class="evento-banner <?php echo empty($evento['banner']) ? 'no-banner' : ''; ?>">
         <?php if (!empty($evento['banner'])): ?>
             <img src="<?php echo htmlspecialchars($evento['banner']); ?>" 
-                 alt="<?php echo htmlspecialchars($evento['titulo']); ?>"
-                 onerror="this.style.display='none'; this.parentElement.classList.add('no-banner')">
+                 alt="<?php echo htmlspecialchars($evento['titulo']); ?>">
         <?php endif; ?>
         <div class="banner-overlay">
             <div class="container">
@@ -171,194 +146,155 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
     </div>
     
     <div class="container">
-        <div class="evento-container">
-            <!-- Ações do evento -->
-            <div class="evento-actions-top">
+        <!-- Ações do evento -->
+        <div class="evento-actions-top">
+            <a href="index.php" class="btn btn-voltar">
+                <i class="fas fa-arrow-left"></i> Voltar para Eventos
+            </a>
+            
+            <?php if ($podeFavoritar && $usuarioAtual): ?>
+                <?php if ($isFavorito): ?>
+                    <a href="evento.php?id=<?php echo $eventoId; ?>&acao=remover_favorito" class="btn btn-favorito ativo">
+                        <i class="fas fa-heart"></i> Remover dos Favoritos
+                    </a>
+                <?php else: ?>
+                    <a href="evento.php?id=<?php echo $eventoId; ?>&acao=adicionar_favorito" class="btn btn-favorito">
+                        <i class="fas fa-heart"></i> Adicionar aos Favoritos
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
+            
+            <?php if ($isAdmin): ?>
+                <a href="editar_evento.php?id=<?php echo $eventoId; ?>" class="btn btn-editar">
+                    <i class="fas fa-edit"></i> Editar Evento
+                </a>
+                <a href="evento.php?id=<?php echo $eventoId; ?>&excluir=<?php echo $eventoId; ?>" 
+                   class="btn btn-excluir"
+                   onclick="return confirm('Tem certeza que deseja excluir o evento \\'<?php echo addslashes($evento['titulo']); ?>\\'? Esta ação não pode ser desfeita!');">
+                    <i class="fas fa-trash"></i> Excluir Evento
+                </a>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Conteúdo principal -->
+        <div class="evento-content">
+            <div class="evento-grid">
+                <!-- Informações principais -->
+                <div class="evento-info-card">
+                    <h2><i class="fas fa-info-circle"></i> Informações do Evento</h2>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-user-tie"></i>
+                            Organizador/Responsável
+                        </div>
+                        <div class="info-value"><?php echo htmlspecialchars($evento['responsavel']); ?></div>
+                    </div>
+                    
+                    <?php if (!empty($evento['categoria_titulo'])): ?>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-tag"></i>
+                            Categoria
+                        </div>
+                        <div class="info-value"><?php echo htmlspecialchars($evento['categoria_titulo']); ?></div>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-check"></i>
+                            Status
+                        </div>
+                        <div class="info-value">
+                            <?php if ($isPassado): ?>
+                                <span class="status-badge passado">
+                                    <i class="fas fa-check-circle"></i> Evento Realizado
+                                </span>
+                            <?php else: ?>
+                                <span class="status-badge futuro">
+                                    <i class="fas fa-bell"></i> Evento Futuro
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <?php if (!empty($evento['usuario_nome'])): ?>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-user-plus"></i>
+                            Criado por
+                        </div>
+                        <div class="info-value">
+                            <?php echo htmlspecialchars($evento['usuario_nome']); ?>
+                            <?php if (!empty($evento['usuario_email'])): ?>
+                                <br><small><?php echo htmlspecialchars($evento['usuario_email']); ?></small>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                
+                <!-- Descrição completa -->
+                <div class="evento-descricao-card">
+                    <h2><i class="fas fa-align-left"></i> Descrição</h2>
+                    <div class="descricao-content">
+                        <?php echo nl2br(htmlspecialchars($evento['descricao'])); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Informações adicionais -->
+            <div class="evento-detalhes-card">
+                <h2>Informações Importantes</h2>
+                <div class="detalhes-grid">
+                    <div class="detalhe-item">
+                        
+                        <div class="detalhe-content">
+                            <h3>Data Completa</h3>
+                            <p><?php 
+                                setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+                                date_default_timezone_set('America/Sao_Paulo');
+                                echo strftime('%A, %d de %B de %Y', strtotime($evento['data'])); 
+                            ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="detalhe-item">
+                        
+                        <div class="detalhe-content">
+                            <h3>Horário</h3>
+                            <p><?php echo date('H:i', strtotime($evento['hora'])); ?> horas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detalhe-item">
+                        
+                        <div class="detalhe-content">
+                            <h3>Localização</h3>
+                            <p><?php echo htmlspecialchars($evento['local']); ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="detalhe-item">
+                       
+                        <div class="detalhe-content">
+                            <h3>Responsável</h3>
+                            <p><?php echo htmlspecialchars($evento['responsavel']); ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ações inferiores -->
+            <div class="evento-actions-bottom">
                 <a href="index.php" class="btn btn-voltar">
                     <i class="fas fa-arrow-left"></i> Voltar para Eventos
                 </a>
-                
-                <?php if ($podeFavoritar): ?>
-                    <?php if ($isFavorito): ?>
-                        <a href="evento.php?id=<?php echo $eventoId; ?>&acao=remover_favorito" class="btn btn-favorito ativo">
-                            <i class="fas fa-heart"></i> Remover dos Favoritos
-                        </a>
-                    <?php else: ?>
-                        <a href="evento.php?id=<?php echo $eventoId; ?>&acao=adicionar_favorito" class="btn btn-favorito">
-                            <i class="fas fa-heart"></i> Adicionar aos Favoritos
-                        </a>
-                    <?php endif; ?>
-                <?php endif; ?>
-                
-                <?php if ($isAdmin): ?>
-                    <a href="editar_evento.php?id=<?php echo $eventoId; ?>" class="btn btn-editar">
-                        <i class="fas fa-edit"></i> Editar Evento
-                    </a>
-                    <a href="evento.php?id=<?php echo $eventoId; ?>&excluir=<?php echo $eventoId; ?>" 
-                       class="btn btn-excluir"
-                       onclick="return confirm('Tem certeza que deseja excluir o evento \\'<?php echo addslashes($evento['titulo']); ?>\\'? Esta ação não pode ser desfeita!');">
-                        <i class="fas fa-trash"></i> Excluir Evento
-                    </a>
-                <?php endif; ?>
-            </div>
             
-            <!-- Conteúdo principal -->
-            <div class="evento-content">
-                <div class="evento-grid">
-                    <!-- Informações principais -->
-                    <div class="evento-info-card">
-                        <h2><i class="fas fa-info-circle"></i> Informações do Evento</h2>
-                        
-                        <div class="info-item">
-                            <div class="info-label">
-                                <i class="fas fa-user-tie"></i>
-                                Organizador/Responsável
-                            </div>
-                            <div class="info-value"><?php echo htmlspecialchars($evento['responsavel']); ?></div>
-                        </div>
-                        
-                        <?php if (!empty($evento['categoria_titulo'])): ?>
-                        <div class="info-item">
-                            <div class="info-label">
-                                <i class="fas fa-tag"></i>
-                                Categoria
-                            </div>
-                            <div class="info-value"><?php echo htmlspecialchars($evento['categoria_titulo']); ?></div>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <div class="info-item">
-                            <div class="info-label">
-                                <i class="fas fa-calendar-check"></i>
-                                Status
-                            </div>
-                            <div class="info-value">
-                                <?php if ($isPassado): ?>
-                                    <span class="status-badge passado">
-                                        <i class="fas fa-check-circle"></i> Evento Realizado
-                                    </span>
-                                <?php else: ?>
-                                    <span class="status-badge futuro">
-                                        <i class="fas fa-bell"></i> Evento Futuro
-                                    </span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        
-                        <?php if (!empty($evento['usuario_nome'])): ?>
-                        <div class="info-item">
-                            <div class="info-label">
-                                <i class="fas fa-user-plus"></i>
-                                Criado por
-                            </div>
-                            <div class="info-value">
-                                <?php echo htmlspecialchars($evento['usuario_nome']); ?>
-                                <?php if (!empty($evento['usuario_email'])): ?>
-                                    <br><small><?php echo htmlspecialchars($evento['usuario_email']); ?></small>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    
-                    <!-- Descrição completa -->
-                    <div class="evento-descricao-card">
-                        <h2><i class="fas fa-align-left"></i> Descrição</h2>
-                        <div class="descricao-content">
-                            <?php echo nl2br(htmlspecialchars($evento['descricao'])); ?>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Informações adicionais -->
-                <div class="evento-detalhes-card">
-                    <h2><i class="fas fa-list-alt"></i> Detalhes Adicionais</h2>
-                    <div class="detalhes-grid">
-                        <div class="detalhe-item">
-                            <div class="detalhe-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="detalhe-content">
-                                <h3>Data Completa</h3>
-                                <p><?php echo date('l, d \\d\\e F \\d\\e Y', strtotime($evento['data'])); ?></p>
-                            </div>
-                        </div>
-                        
-                        <div class="detalhe-item">
-                            <div class="detalhe-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="detalhe-content">
-                                <h3>Horário</h3>
-                                <p><?php echo date('H:i', strtotime($evento['hora'])); ?> horas</p>
-                            </div>
-                        </div>
-                        
-                        <div class="detalhe-item">
-                            <div class="detalhe-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="detalhe-content">
-                                <h3>Localização</h3>
-                                <p><?php echo htmlspecialchars($evento['local']); ?></p>
-                            </div>
-                        </div>
-                        
-                        <div class="detalhe-item">
-                            <div class="detalhe-icon">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
-                            <div class="detalhe-content">
-                                <h3>Responsável</h3>
-                                <p><?php echo htmlspecialchars($evento['responsavel']); ?></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Ações inferiores -->
-                <div class="evento-actions-bottom">
-                    <a href="index.php" class="btn btn-voltar">
-                        <i class="fas fa-arrow-left"></i> Voltar para Eventos
-                    </a>
-                    
-                    <?php if ($isAdmin): ?>
-                        <a href="admin_eventos.php" class="btn btn-admin">
-                            <i class="fas fa-cog"></i> Painel Administrativo
-                        </a>
-                    <?php endif; ?>
-                    
-                    <!-- Botão de compartilhamento (simulado) -->
-                    <button class="btn btn-compartilhar" onclick="compartilharEvento()">
-                        <i class="fas fa-share-alt"></i> Compartilhar
-                    </button>
-                </div>
             </div>
         </div>
     </div>
-    
-    <script>
-        function compartilharEvento() {
-            if (navigator.share) {
-                navigator.share({
-                    title: '<?php echo addslashes($evento['titulo']); ?>',
-                    text: 'Confira este evento na Agenda Cultural!',
-                    url: window.location.href
-                })
-                .then(() => console.log('Evento compartilhado com sucesso'))
-                .catch((error) => console.log('Erro ao compartilhar:', error));
-            } else {
-                // Fallback para copiar link
-                const link = window.location.href;
-                navigator.clipboard.writeText(link)
-                    .then(() => {
-                        alert('Link copiado para a área de transferência!');
-                    })
-                    .catch((error) => {
-                        alert('Erro ao copiar link. Tente manualmente: ' + link);
-                    });
-            }
-        }
-    </script>
+     <?php require_once 'footer.php'; ?>
 </body>
 </html>

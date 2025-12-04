@@ -1,0 +1,494 @@
+/* ===== ESTILOS PARA PÁGINA DE EVENTO ===== */
+
+/* Reset e estilos gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Banner do evento */
+.evento-banner {
+    position: relative;
+    height: 400px;
+    background: linear-gradient(135deg, #02416D 0%, #0268A6 100%);
+    overflow: hidden;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(2, 65, 109, 0.3);
+}
+
+.evento-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    padding: 40px;
+}
+
+.evento-header {
+    color: white;
+    width: 100%;
+}
+
+.evento-tipo-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(205, 208, 113, 0.9);
+    color: #02416D;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.evento-header h1 {
+    font-size: 3rem;
+    margin: 15px 0;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    line-height: 1.2;
+}
+
+.evento-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.evento-metadata span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    font-size: 1.1rem;
+}
+
+/* Botões */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn:focus {
+    outline: 3px solid #CDD071;
+    outline-offset: 2px;
+}
+
+.btn-voltar {
+    background: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.btn-voltar:hover {
+    background: #5a6268;
+    border-color: #5a6268;
+}
+
+.btn-favorito {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.btn-favorito:hover {
+    background: #c82333;
+    border-color: #c82333;
+}
+
+.btn-favorito.ativo {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.btn-favorito.ativo:hover {
+    background: #218838;
+    border-color: #218838;
+}
+
+.btn-editar {
+    background: #ffc107;
+    color: #212529;
+    border-color: #ffc107;
+}
+
+.btn-editar:hover {
+    background: #e0a800;
+    border-color: #e0a800;
+}
+
+.btn-excluir {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.btn-excluir:hover {
+    background: #c82333;
+    border-color: #c82333;
+}
+
+.btn-admin {
+    background: #02416D;
+    color: white;
+    border-color: #02416D;
+}
+
+.btn-admin:hover {
+    background: #0268A6;
+    border-color: #0268A6;
+}
+
+.btn-compartilhar {
+    background: #17a2b8;
+    color: white;
+    border-color: #17a2b8;
+}
+
+.btn-compartilhar:hover {
+    background: #138496;
+    border-color: #138496;
+}
+
+/* Ações do topo */
+.evento-actions-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+/* Conteúdo principal */
+.evento-content {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+.evento-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Cards de informação */
+.evento-info-card, .evento-descricao-card {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 12px;
+    border-left: 5px solid #02416D;
+}
+
+.evento-info-card h2, .evento-descricao-card h2 {
+    color: #02416D;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-item {
+    margin-bottom: 20px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #02416D;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.info-value {
+    padding-left: 30px;
+    color: #495057;
+    line-height: 1.5;
+}
+
+.info-value small {
+    color: #6c757d;
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 5px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.status-badge.passado {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-badge.futuro {
+    background: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+/* Descrição */
+.descricao-content {
+    line-height: 1.8;
+    color: #495057;
+    font-size: 1.05rem;
+}
+
+.descricao-content p {
+    margin-bottom: 15px;
+}
+
+/* Detalhes adicionais */
+.evento-detalhes-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 30px;
+    border-radius: 12px;
+    border-left: 5px solid #CDD071;
+    margin-bottom: 30px;
+}
+
+.evento-detalhes-card h2 {
+    color: #02416D;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detalhes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.detalhe-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    transition: border-color 0.3s;
+}
+
+.detalhe-item:hover {
+    border-color: #02416D;
+}
+
+.detalhe-icon {
+    background: #02416D;
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.detalhe-content h3 {
+    color: #02416D;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.detalhe-content p {
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Ações inferiores */
+.evento-actions-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding-top: 30px;
+    border-top: 2px solid #e9ecef;
+}
+
+/* Mensagens fixas */
+.mensagem-fixa {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid #c3e6cb;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.mensagem-fixa.erro {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Quando não tem banner */
+.no-banner {
+    background: linear-gradient(135deg, #02416D 0%, #0268A6 100%);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .evento-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .evento-banner {
+        height: 300px;
+    }
+    
+    .evento-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .banner-overlay {
+        padding: 20px;
+    }
+    
+    .evento-content {
+        padding: 25px;
+    }
+    
+    .evento-info-card, .evento-descricao-card {
+        padding: 20px;
+    }
+    
+    .detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .evento-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .evento-tipo-banner {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+    
+    .evento-metadata {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .evento-metadata span {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .evento-actions-top, .evento-actions-bottom {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+}
+
+/* Acessibilidade - foco visível para navegação por teclado */
+a:focus,
+button:focus,
+.btn:focus {
+    outline: 3px solid #CDD071;
+    outline-offset: 2px;
+}
+
+/* Estilos para ícones */
+.fas, .far, .fab {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+.fab {
+    font-family: 'Font Awesome 6 Brands';
+}
+
+/* Garantir que imagens sejam responsivas */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Estilo para o confirm do JavaScript (mantido para exclusão) */
+.confirm-dialog {
+    display: none; /* Será mostrado pelo JavaScript se necessário */
+}
