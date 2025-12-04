@@ -1,83 +1,52 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 header("Access-Control-Allow-Origin: *");
-include '../config.php';
+include '../config.php'; // aqui tem $pdo
 
-$response = array("sucesso" => false, "msg" => "", "eventos" => array());
+$response = array("sucesso" => false);
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $usuario_id = $_GET['usuario_id'] ?? '';
+// Verifica parâmetros obrigatórios
+if (!isset($_GET["usuario_fk"]) || !isset($_GET["evento_fk"])) {
+    $response["msg"] = "Parâmetros usuario_fk e evento_fk são obrigatórios.";
+    echo json_encode($response);
+    exit;
+}
 
-    if (empty($usuario_id)) {
-        $response["msg"] = "ID do usuário é obrigatório";
-        echo json_encode($response);
-        exit;
-    }
+$usuario_fk = $_GET["usuario_fk"];
+$evento_fk  = $_GET["evento_fk"];
 
-    try {
-        $sql = "SELECT 
-                    e.id_pk as id,
-                    e.titulo,
-                    e.data,
-                    e.hora,
-                    e.local,
-                    e.descricao,
-                    e.tipoEvento,
-                    e.responsavel,
-                    e.banner,
-                    e.categoria_fk as categoria_id,
-                    e.usuario_fk as criador_id,
-                    f.id_pk as favorito_id,
-                    f.data_adicao
-                FROM favoritos f
-                INNER JOIN evento e ON f.evento_fk = e.id_pk
-                WHERE f.usuario_fk = ?
-                ORDER BY e.data DESC, e.hora DESC";
-        
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $usuario_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        $eventos = array();
-        
-        while ($row = $result->fetch_assoc()) {
-            $eventos[] = array(
-                "id" => $row['id'],
-                "titulo" => $row['titulo'],
-                "data" => $row['data'],
-                "hora" => $row['hora'],
-                "local" => $row['local'],
-                "descricao" => $row['descricao'],
-                "tipoEvento" => $row['tipoEvento'],
-                "responsavel" => $row['responsavel'],
-                "banner" => $row['banner'],
-                "categoria_id" => $row['categoria_id'],
-                "criador_id" => $row['criador_id'],
-                "favorito_id" => $row['favorito_id'],
-                "data_adicao_favorito" => $row['data_adicao'],
-                "favoritado" => true
-            );
-        }
-        
-        $response["sucesso"] = true;
-        $response["msg"] = "Eventos favoritos carregados com sucesso";
-        $response["eventos"] = $eventos;
-        $response["total"] = count($eventos);
-        
-        $stmt->close();
-        
-    } catch (Exception $e) {
-        $response["msg"] = "Erro no sistema: " . $e->getMessage();
-    }
-    
+// PDO prepare
+$stmt = $pdo->prepare("
+    SELECT 
+        e.id_pk, 
+        e.titulo, 
+        e.data, 
+        e.hora, 
+        e.local, 
+        e.descricao,
+        e.tipoEvento,
+        e.responsavel,
+        e.banner,
+        c.titulo AS categoria,
+        u.nome AS criador,
+        f.dataCriacao AS favoritadoEm
+    FROM favorito f
+    INNER JOIN evento e ON f.evento_fk = e.id_pk
+    LEFT JOIN categoria c ON e.categoria_fk = c.id_pk
+    LEFT JOIN usuario u ON e.usuario_fk = u.id_pk
+    WHERE f.usuario_fk = ? AND e.id_pk = ?
+    LIMIT 1
+");
+
+$stmt->execute([$usuario_fk, $evento_fk]);
+$evento = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($evento) {
+    $response["sucesso"] = true;
+    $response["favorito"] = $evento;
 } else {
-    $response["msg"] = "Método inválido. Use GET.";
+    $response["msg"] = "Nenhum evento favorito encontrado para este ID.";
 }
 
-if (isset($conn)) {
-    $conn->close();
-}
-
-echo json_encode($response, JSON_UNESCAPED_UNICODE);
-exit;
+echo json_encode($response);
+?>
