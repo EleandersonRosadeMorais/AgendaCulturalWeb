@@ -180,7 +180,7 @@ if (!empty($dadosUsuario['dataCriacao'])) {
         <div class="perfil-container">
             
             
-            <!-- Mensagens de feedback -->
+            
             <?php if ($sucesso && !empty($mensagem_sucesso)): ?>
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($mensagem_sucesso); ?>
@@ -196,9 +196,9 @@ if (!empty($dadosUsuario['dataCriacao'])) {
                 </div>
             <?php endif; ?>
             
-            <!-- Conteúdo do Perfil -->
+            
             <div class="perfil-content">
-                <!-- Formulário de Edição -->
+                
                 <div class="info-card">
                     <h3><i class="fas fa-user-edit"></i> Editar Perfil</h3>
                     <form method="POST" action="">
@@ -225,7 +225,7 @@ if (!empty($dadosUsuario['dataCriacao'])) {
                         </button>
                     </form>
                     
-                    <!-- Formulário de Alteração de Senha -->
+                   
                     <details class="alterar-senha-details">
                         <summary class="btn-alterar-senha">
                             <i class="fas fa-key"></i> Alterar Senha
@@ -256,7 +256,7 @@ if (!empty($dadosUsuario['dataCriacao'])) {
                     </details>
                 </div>
                 
-                <!-- Informações do Perfil -->
+               
                 <div class="info-card">
                     <h3><i class="fas fa-info-circle"></i> Informações da Conta</h3>
                     <div class="info-grid">
@@ -280,7 +280,7 @@ if (!empty($dadosUsuario['dataCriacao'])) {
                     
                     
                     
-                    <!-- Ações da Conta -->
+                    
                     <h3 class="section-title"><i class="fas fa-cog"></i> Ações da Conta</h3>
                     <div class="acoes-conta">
                         

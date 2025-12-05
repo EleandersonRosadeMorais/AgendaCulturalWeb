@@ -1,4 +1,3 @@
-/* ===== ESTILOS PARA EDIÇÃO DE EVENTOS ===== */
 
 /* Reset e estilos gerais */
 * {
@@ -599,7 +598,7 @@ select {
     outline: none;
 }
 
-/* Suporte para navegadores antigos */
+
 @supports not (selector(:has(*))) {
     .form-group label::after {
         content: ' *';

@@ -1,6 +1,4 @@
-/* ===== CADASTRO DE EVENTO ===== */
 
-/* CORREÇÃO: FONTE GLOBAL PARA TODO O FORMULÁRIO */
 body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h5, h6 {
     font-family: Arial, sans-serif !important;
     font-size: 16px !important;
@@ -24,7 +22,7 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
     font-size: 16px;
 }
 
-/* Header do cadastro - CORRIGIDO */
+/* Header do cadastro*/
 .register-header {
     background: linear-gradient(135deg, #02416D 0%, #0268A6 100%);
     color: white;
@@ -46,7 +44,7 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
 }
 
 .register-header h1 {
-    font-size: 32px; /* 2.2rem convertido para px */
+    font-size: 32px; 
     margin-bottom: 10px;
     font-weight: 700;
     display: flex;
@@ -58,10 +56,10 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
 
 .register-header h1 i {
     color: #CDD071;
-    font-size: 40px; /* 2.5rem convertido para px */
+    font-size: 40px; 
 }
 
-/* CORREÇÃO: Estilização dos parágrafos */
+
 .register-header p {
     margin: 8px 0;
     opacity: 0.9;
@@ -70,7 +68,7 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
     font-family: Arial, sans-serif;
 }
 
-/* CORREÇÃO: Usuário info */
+/* Usuário info */
 .register-header p:has(i.fa-user) {
     background: rgba(255, 255, 255, 0.1);
     padding: 8px 15px;
@@ -92,7 +90,7 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
     color: #CDD071;
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 14.4px; /* 0.9em convertido para px */
+    font-size: 14.4px; 
     margin-top: 10px;
     border: 1px solid rgba(205, 208, 113, 0.3);
     font-weight: 600;
@@ -140,7 +138,7 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
 
 .success-message i {
     color: #28a745;
-    font-size: 24px; /* 1.5em convertido para px */
+    font-size: 24px;
     margin-top: 2px;
 }
 
@@ -162,13 +160,13 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
-    font-size: 17.6px; /* 1.1em convertido para px */
+    font-size: 17.6px; 
     font-family: Arial, sans-serif;
 }
 
 .error-header i {
     color: #ff6b6b;
-    font-size: 20.8px; /* 1.3em convertido para px */
+    font-size: 20.8px; 
 }
 
 .error-message ul {
@@ -228,7 +226,7 @@ body, input, select, textarea, button, a, label, span, div, p, h1, h2, h3, h4, h
     grid-column: 1 / -1;
 }
 
-/* CORREÇÃO: Labels */
+/* Labels */
 .form-group label {
     color: #02416D;
     font-weight: 600;
@@ -284,11 +282,11 @@ textarea {
     font-size: 16px;
 }
 
-/* CORREÇÃO: Placeholder visível */
+/* Placeholder visível */
 ::placeholder {
     color: #6c757d !important;
     opacity: 0.7 !important;
-    font-size: 15.2px; /* 0.95em convertido para px */
+    font-size: 15.2px; 
     font-family: Arial, sans-serif;
 }
 
@@ -314,7 +312,7 @@ textarea {
     font-size: 16px;
 }
 
-/* CORREÇÃO: Campos com erro */
+/*Campos com erro */
 .input-error {
     border-color: #ff6b6b !important;
     background-color: #fff5f5 !important;
@@ -330,7 +328,7 @@ textarea {
     color: #ff6b6b;
     display: block;
     margin-top: 8px;
-    font-size: 14px; /* 0.875em convertido para px */
+    font-size: 14px; 
     display: flex;
     align-items: center;
     gap: 5px;
@@ -338,10 +336,10 @@ textarea {
 }
 
 .error-text i {
-    font-size: 14.4px; /* 0.9em convertido para px */
+    font-size: 14.4px; 
 }
 
-/* CORREÇÃO: Upload de arquivo */
+/*Upload de arquivo */
 .file-upload-wrapper {
     margin-bottom: 10px;
     font-family: Arial, sans-serif;
@@ -360,7 +358,7 @@ textarea {
     transition: all 0.3s;
     border: none;
     font-weight: 600;
-    font-size: 16px; /* 1rem convertido para px */
+    font-size: 16px; 
     position: relative;
     font-family: Arial, sans-serif;
 }
@@ -373,7 +371,7 @@ textarea {
 
 .upload-icon {
     color: white;
-    font-size: 19.2px; /* 1.2em convertido para px */
+    font-size: 19.2px; 
 }
 
 .file-input {
@@ -392,7 +390,7 @@ textarea {
     padding: 12px 15px;
     background: #f8f9fa;
     border-radius: 8px;
-    font-size: 15.2px; /* 0.95em convertido para px */
+    font-size: 15.2px; 
     color: #495057;
     border-left: 4px solid #02416D;
     display: flex;
@@ -403,14 +401,14 @@ textarea {
 
 .file-name i {
     color: #02416D;
-    font-size: 17.6px; /* 1.1em convertido para px */
+    font-size: 17.6px; 
 }
 
 .file-help {
     display: block;
     margin-top: 10px;
     color: #6c757d;
-    font-size: 14.4px; /* 0.9em convertido para px */
+    font-size: 14.4px; 
     padding: 5px 0;
     font-family: Arial, sans-serif;
 }
@@ -420,7 +418,7 @@ textarea {
     margin-right: 5px;
 }
 
-/* CORREÇÃO: Ações do formulário */
+/*Ações do formulário */
 .form-actions {
     display: flex;
     gap: 20px;
@@ -481,7 +479,7 @@ textarea {
     box-shadow: 0 5px 15px rgba(205, 208, 113, 0.3);
 }
 
-/* CORREÇÃO: Indicadores obrigatórios */
+/* Indicadores obrigatórios */
 .form-group label.required::after,
 label[for]:has(+ input[required], + select[required], + textarea[required])::after {
     content: ' *';
@@ -521,7 +519,7 @@ label[for]:has(+ input[required], + select[required], + textarea[required])::aft
     }
     
     .register-header h1 {
-        font-size: 28.8px; /* 1.8rem convertido para px */
+        font-size: 28.8px; 
     }
     
     .register-form {
@@ -552,15 +550,15 @@ label[for]:has(+ input[required], + select[required], + textarea[required])::aft
     }
     
     .register-header h1 {
-        font-size: 24px; /* 1.5rem convertido para px */
+        font-size: 24px; 
     }
     
     .register-header p {
-        font-size: 14.4px; /* 0.9rem convertido para px */
+        font-size: 14.4px; 
     }
     
     .admin-badge {
-        font-size: 12.8px; /* 0.8rem convertido para px */
+        font-size: 12.8px; 
         padding: 6px 12px;
     }
     
@@ -574,11 +572,11 @@ label[for]:has(+ input[required], + select[required], + textarea[required])::aft
     textarea,
     .form-select {
         padding: 12px;
-        font-size: 16px; /* Mantido 16px mesmo no mobile */
+        font-size: 16px; 
     }
 }
 
-/* CORREÇÃO: Para garantir que ícones FontAwesome apareçam */
+/* Para garantir que ícones FontAwesome apareçam */
 .fas, .far, .fab {
     font-family: 'Font Awesome 6 Free', Arial, sans-serif !important;
 }
@@ -587,7 +585,7 @@ label[for]:has(+ input[required], + select[required], + textarea[required])::aft
     font-family: 'Font Awesome 6 Free', Arial, sans-serif !important;
 }
 
-/* CORREÇÃO: Garantir que o texto de "Todos os campos são obrigatórios" apareça */
+/*Garantir que o texto de "Todos os campos são obrigatórios" apareça */
 .register-header .text-danger {
     display: block !important;
     visibility: visible !important;
@@ -601,7 +599,7 @@ label[for]:has(+ input[required], + select[required], + textarea[required])::aft
     font-size: 16px;
 }
 
-/* CORREÇÃO: Estilo para a linha divisória visual */
+/*Estilo para a linha divisória visual */
 .register-header hr {
     border: none;
     height: 1px;
@@ -610,7 +608,7 @@ label[for]:has(+ input[required], + select[required], + textarea[required])::aft
     display: block;
 }
 
-/* REGRA ADICIONAL: Forçar Arial 16px em todos os elementos */
+
 * {
     font-family: Arial, sans-serif !important;
 }
@@ -619,7 +617,7 @@ body {
     font-size: 16px !important;
 }
 
-/* Ajuste para elementos específicos que podem ter herança quebrada */
+
 button, input, select, textarea, a, span, div, p, label, small, strong, em {
     font-family: Arial, sans-serif !important;
     font-size: 16px !important;

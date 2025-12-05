@@ -103,7 +103,7 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
 <body>
     <?php require_once 'header.php'; ?>
     
-    <!-- Mensagens fixas (sem JavaScript) -->
+   
     <?php if (isset($_SESSION['mensagem'])): ?>
         <div class="container">
             <div class="mensagem-fixa <?php echo $_SESSION['mensagem_tipo'] === 'erro' ? 'erro' : ''; ?>">
@@ -114,7 +114,7 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
         </div>
     <?php endif; ?>
     
-    <!-- Banner do evento -->
+    
     <div class="evento-banner <?php echo empty($evento['banner']) ? 'no-banner' : ''; ?>">
         <?php if (!empty($evento['banner'])): ?>
             <img src="<?php echo htmlspecialchars($evento['banner']); ?>" 
@@ -146,7 +146,7 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
     </div>
     
     <div class="container">
-        <!-- Ações do evento -->
+        
         <div class="evento-actions-top">
             <a href="index.php" class="btn btn-voltar">
                 <i class="fas fa-arrow-left"></i> Voltar para Eventos
@@ -176,10 +176,10 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
             <?php endif; ?>
         </div>
         
-        <!-- Conteúdo principal -->
+        
         <div class="evento-content">
             <div class="evento-grid">
-                <!-- Informações principais -->
+                
                 <div class="evento-info-card">
                     <h2><i class="fas fa-info-circle"></i> Informações do Evento</h2>
                     
@@ -235,7 +235,7 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
                     <?php endif; ?>
                 </div>
                 
-                <!-- Descrição completa -->
+                
                 <div class="evento-descricao-card">
                     <h2><i class="fas fa-align-left"></i> Descrição</h2>
                     <div class="descricao-content">
@@ -244,7 +244,7 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
                 </div>
             </div>
             
-            <!-- Informações adicionais -->
+            
             <div class="evento-detalhes-card">
                 <h2>Informações Importantes</h2>
                 <div class="detalhes-grid">
@@ -286,7 +286,7 @@ $isPassado = strtotime($evento['data']) < strtotime(date('Y-m-d'));
                 </div>
             </div>
             
-            <!-- Ações inferiores -->
+            
             <div class="evento-actions-bottom">
                 <a href="index.php" class="btn btn-voltar">
                     <i class="fas fa-arrow-left"></i> Voltar para Eventos

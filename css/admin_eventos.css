@@ -1,4 +1,4 @@
-/* css/admin_eventos.css - Padrão de cores: #02416D, #CDD071, #F8F8EC, #FFFFFF, #000000 */
+
 
 * {
     margin: 0;
@@ -729,7 +729,7 @@ body {
     }
 }
 
-/* Animações adicionais */
+
 .eventos-table tbody tr {
     animation: fadeInUp 0.5s ease-out;
     animation-fill-mode: both;
@@ -752,7 +752,7 @@ body {
 .eventos-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
 .eventos-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
 
-/* Hover effects para elementos interativos */
+
 .btn:focus,
 .btn-view:focus,
 .btn-edit:focus,
@@ -762,7 +762,7 @@ body {
     outline-offset: 2px;
 }
 
-/* Melhorias de acessibilidade */
+
 @media (prefers-reduced-motion: reduce) {
     .admin-container,
     .alert,

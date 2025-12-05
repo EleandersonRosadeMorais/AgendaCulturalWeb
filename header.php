@@ -1,10 +1,10 @@
 <?php
-// header.php - Verificar se a sessão já foi iniciada
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// INCLUIR config.php para ter acesso às funções
+
 require_once 'config.php';
 ?>
 <!DOCTYPE html>
@@ -33,15 +33,15 @@ require_once 'config.php';
                         <li><a href="index.php"><i class="fas fa-home"></i> Início</a></li>
                         
                         <?php if (isset($_SESSION['usuario'])): ?>
-                            <!-- Menu para usuários logados -->
+                           
                            
                             
-                            <!-- MOSTRAR "Favoritos" APENAS PARA USUÁRIOS COMUNS (NÃO ADMIN) -->
+                            
                             <?php if (!isAdmin()): ?>
                                 <li><a href="favoritos.php"><i class="fas fa-heart"></i> Favoritos</a></li>
                             <?php endif; ?>
                             
-                            <!-- MOSTRAR "Gerenciador Admin" APENAS PARA ADMINS -->
+                            
                             
                             <li class="nav-dropdown">
                                 <a href="#" class="user-menu">
@@ -52,7 +52,7 @@ require_once 'config.php';
                                 <ul class="dropdown-menu">
                                     <li><a href="perfil.php"><i class="fas fa-user"></i> Meu Perfil</a></li>
                                     
-                                    <!-- MOSTRAR "Gerenciador" APENAS PARA ADMINS NO DROPDOWN -->
+                                   
                                     <?php if (isAdmin()): ?>
                                         <li><a href="admin_usuarios.php"><i class="fas fa-cog"></i> Gerenciador Usuários</a></li>
                                     <?php endif; ?>
@@ -70,7 +70,6 @@ require_once 'config.php';
                                 </ul>
                             </li>
                         <?php else: ?>
-                            <!-- Menu para visitantes não logados -->
                             <li><a href="login.php"><i class="fas fa-sign-in-alt"></i> Entrar</a></li>
                             <li><a href="cadastroUsuario.php" class="register-btn">
                                 <i class="fas fa-user-plus"></i> Cadastrar

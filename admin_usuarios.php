@@ -145,7 +145,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
             <p class="admin-logado">Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario']['nome']); ?></strong> (<?php echo htmlspecialchars($_SESSION['usuario']['email']); ?>)</p>
         </div>
 
-        <!-- Mensagens -->
+       
         <?php if ($mensagem_sucesso): ?>
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> <?php echo $mensagem_sucesso; ?>
@@ -159,7 +159,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
         <?php endif; ?>
 
 
-        <!-- Filtros e Busca -->
+        
         <div class="filtros-container">
             <form method="GET" class="filtros-form">
                 <div class="filtro-group">
@@ -189,7 +189,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
             </form>
         </div>
 
-        <!-- Resultados da Busca -->
+       
         <?php if (!empty($termo_busca) || !empty($filtro_tipo)): ?>
             <div class="search-results">
                 <p>
@@ -205,7 +205,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
             </div>
         <?php endif; ?>
 
-        <!-- Tabela de Usuários -->
+       
         <div class="usuarios-section">
             <div class="section-header">
                 <h2><i class="fas fa-list"></i> Lista de Usuários</h2>
@@ -282,7 +282,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
                                     
                                     <td class="user-actions">
                                         <div class="action-buttons">
-                                            <!-- Form para alterar tipo -->
+                                           
                                             <form method="POST" class="action-form">
                                                 <input type="hidden" name="usuario_id" value="<?php echo $usuario['id_pk']; ?>">
                                                 <input type="hidden" name="acao" value="alterar_tipo">
@@ -293,7 +293,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
                                                 </select>
                                             </form>
                                             
-                                            <!-- Botão Excluir -->
+                                            
                                             <?php if (!$isCurrentUser): ?>
                                                 <form method="POST" class="action-form" 
                                                       onsubmit="return confirm('Tem certeza que deseja excluir o usuário \\'<?php echo addslashes($usuario['nome']); ?>\\'? Esta ação não pode ser desfeita!');">
@@ -316,7 +316,7 @@ if (!empty($filtro_tipo) && $filtro_tipo !== 'todos') {
             <?php endif; ?>
         </div>
 
-        <!-- Links de navegação -->
+        
         <div class="admin-navigation">
             <a href="index.php" class="btn btn-admin">
                 <i class="fas fa-arrow-left"></i> Voltar a Página Principal
