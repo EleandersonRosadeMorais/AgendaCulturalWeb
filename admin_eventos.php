@@ -110,7 +110,7 @@ if (isset($_GET['excluir'])) {
     }
 }
 
-// Buscar dados do banco
+
 $eventos = getTodosEventosAdmin();
 $estatisticas = getEstatisticasEventos();
 
@@ -149,7 +149,7 @@ if (!empty($termo_busca)) {
             <p class="admin-logado">Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario']['nome'] ?? 'Admin'); ?></strong> (Administrador)</p>
         </div>
 
-        <!-- Mensagens -->
+        
         <?php if ($mensagem_sucesso): ?>
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> <?php echo $mensagem_sucesso; ?>
@@ -163,7 +163,7 @@ if (!empty($termo_busca)) {
         <?php endif; ?>
 
 
-        <!-- Filtros e Busca -->
+       
         <div class="filtros-container">
             <form method="GET" class="filtros-form">
                 <div class="filtro-group">
@@ -187,7 +187,7 @@ if (!empty($termo_busca)) {
             </form>
         </div>
 
-        <!-- Resultados da Busca -->
+      
         <?php if (!empty($termo_busca)): ?>
             <div class="search-results">
                 <p>
@@ -198,7 +198,7 @@ if (!empty($termo_busca)) {
             </div>
         <?php endif; ?>
 
-        <!-- Tabela de Eventos -->
+        
         <div class="eventos-section">
             <div class="section-header">
                 <h2><i class="fas fa-list"></i> Lista de Eventos</h2>
@@ -344,7 +344,7 @@ if (!empty($termo_busca)) {
             <?php endif; ?>
         </div>
 
-        <!-- Links de navegação -->
+        
         <div class="admin-navigation">
             <a href="admin_usuarios.php" class="btn btn-admin">
                 <i class="fas fa-users-cog"></i> Gerenciar Usuários

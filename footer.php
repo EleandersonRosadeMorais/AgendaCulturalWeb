@@ -1,13 +1,13 @@
 <?php
-// footer.php - Footer padrão sem JavaScript
+
 $anoAtual = date('Y');
 ?>
 
 <footer class="footer">
     <div class="footer-container">
-        <!-- Seção principal com 2 colunas -->
+       
         <div class="footer-main">
-            <!-- Coluna da esquerda: Logo, descrição e redes sociais -->
+           
             <div class="footer-left">
                 <div class="footer-logo-section">
                     <div class="logo-footer">
@@ -21,7 +21,7 @@ $anoAtual = date('Y');
                     </p>
                 </div>
                 
-                <!-- Redes sociais -->
+                
                 <div class="footer-social">
                     <a href="https://www.facebook.com/ulbrasaolucas" class="social-link" title="Facebook">
                         <i class="fab fa-facebook-f"></i>

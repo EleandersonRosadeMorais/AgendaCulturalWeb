@@ -379,7 +379,7 @@ try {
                             </span>
                         </div>
                         
-                        <!-- Mostra o nome do arquivo selecionado -->
+                       
                         <?php if (isset($_FILES['banner']) && $_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE): ?>
                             <?php 
                             $fileName = htmlspecialchars($_FILES['banner']['name']);

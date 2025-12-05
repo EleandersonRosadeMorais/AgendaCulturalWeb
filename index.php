@@ -105,7 +105,7 @@ if (isset($_SESSION['mensagem'])) {
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/footer.css"> 
     <style>
-        /* Estilo para mensagens de feedback */
+       
         .mensagem-flash {
             position: fixed;
             top: 80px;
@@ -148,7 +148,7 @@ if (isset($_SESSION['mensagem'])) {
             }
         }
         
-        /* Estilo para botões de favorito */
+        
         .btn-favorito {
             background-color: #f8f9fa;
             color: #6c757d;
@@ -168,7 +168,7 @@ if (isset($_SESSION['mensagem'])) {
             color: #b91c1c;
         }
         
-        /* Badge para indicar favorito */
+        
         .favorito-badge {
             position: absolute;
             top: 10px;
@@ -181,7 +181,7 @@ if (isset($_SESSION['mensagem'])) {
             z-index: 2;
         }
         
-        /* Indicador de admin */
+        
         .admin-indicator {
             background: rgba(2, 65, 109, 0.1);
             color: #02416D;
@@ -209,7 +209,7 @@ if (isset($_SESSION['mensagem'])) {
     <?php endif; ?>
 
     <div class="container">
-        <!-- Indicador de admin -->
+        
         <?php if ($isAdmin): ?>
             <div style="margin-bottom: 20px; text-align: center;">
                 <div class="admin-indicator">
@@ -232,7 +232,7 @@ if (isset($_SESSION['mensagem'])) {
                 <?php endif; ?>
             </div>
         <?php else: ?>
-            <!-- Eventos Futuros -->
+           
             <?php if (!empty($eventosFuturos)): ?>
                 <h1 class="page-title">
                     <i class="fas fa-calendar-alt"></i> Próximos Eventos
@@ -319,7 +319,7 @@ if (isset($_SESSION['mensagem'])) {
                 </div>
             <?php endif; ?>
 
-            <!-- Eventos Passados -->
+            
             <?php if (!empty($eventosPassados)): ?>
                 <h2 class="page-title" style="margin-top: 40px;">
                     <i class="fas fa-history"></i> Eventos Realizados

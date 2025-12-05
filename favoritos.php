@@ -111,7 +111,7 @@ if (isset($_SESSION['mensagem'])) {
                 </a>
             </div>
         <?php else: ?>
-            <!-- Favoritos Futuros -->
+            
             <?php if (!empty($futuros)): ?>
                 <h2 class="page-title">
                     <i class="fas fa-calendar-check"></i> Próximos Favoritos
@@ -197,7 +197,7 @@ if (isset($_SESSION['mensagem'])) {
                 </div>
             <?php endif; ?>
 
-            <!-- Favoritos Passados -->
+           
             <?php if (!empty($passados)): ?>
                 <h2 class="page-title" style="margin-top: 40px;">
                     <i class="fas fa-history"></i> Favoritos Realizados
