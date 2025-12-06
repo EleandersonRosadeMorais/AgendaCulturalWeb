@@ -1,16 +1,42 @@
 <?php
-// Configurações do MySQL
+// config.php - VERSÃO IDÊNTICA AO ACHADOS E PERDIDOS
+
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'bdAgendaCultural');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'jeferson_ac');
+define('DB_USER', 'jeferson_ac');
+define('DB_PASS', 'Ulbra@2025');
 
 // Conexão com o MySQL
 try {
-    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8", DB_USER, DB_PASS);
+    // Tentativa com utf8mb4
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $pdo = new PDO($dsn, DB_USER, DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erro na conexão: " . $e->getMessage());
+    
+    $pdo->exec("SET NAMES 'utf8mb4'");
+    $pdo->exec("SET CHARACTER SET utf8mb4");
+    $pdo->exec("SET character_set_connection = utf8mb4");
+    $pdo->exec("SET character_set_client = utf8mb4");
+    $pdo->exec("SET character_set_results = utf8mb4");
+    
+} catch (PDOException $exception) {
+    // Se utf8mb4 falhar, tentar utf8
+    try {
+        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8";
+        $pdo = new PDO($dsn, DB_USER, DB_PASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->exec("SET NAMES 'utf8'");
+    } catch (PDOException $e) {
+        // Se tudo falhar, tentar sem charset
+        try {
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME;
+            $pdo = new PDO($dsn, DB_USER, DB_PASS);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $finalError) {
+            // Se todas as tentativas falharem
+            die("ERRO CRÍTICO: Não foi possível conectar ao banco de dados. Erro: " . $finalError->getMessage());
+        }
+    }
 }
 
 // ============ FUNÇÕES DO SISTEMA ============
