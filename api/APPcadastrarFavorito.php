@@ -1,80 +1,62 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 header("Access-Control-Allow-Origin: *");
-include '../config.php';
 
-$response = array("sucesso" => false, "msg" => "", "favoritos" => array());
+include __DIR__ . '/../config.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $usuario_id = $_GET['usuario_id'] ?? '';
+$response = ["sucesso" => false, "msg" => ""];
 
-    if (empty($usuario_id)) {
-        $response["msg"] = "ID do usuário é obrigatório";
-        echo json_encode($response);
+// Aceita GET
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+    $usuario_fk = $_GET['usuario_fk'] ?? null;
+    $evento_fk  = $_GET['evento_fk'] ?? null;
+
+    if (empty($usuario_fk) || empty($evento_fk)) {
+        $response["msg"] = "Parâmetros usuario_fk e evento_fk são obrigatórios.";
+        echo json_encode($response, JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     try {
-        $sql = "SELECT 
-                    f.id_pk as favorito_id,
-                    f.data_adicao,
-                    e.id_pk as evento_id,
-                    e.titulo,
-                    e.data,
-                    e.hora,
-                    e.local,
-                    e.descricao,
-                    e.tipoEvento,
-                    e.responsavel,
-                    e.banner,
-                    e.categoria_fk as categoria_id
-                FROM favoritos f
-                INNER JOIN evento e ON f.evento_fk = e.id_pk
-                WHERE f.usuario_fk = ?
-                ORDER BY f.data_adicao DESC";
+        // 🔥 SIMPLES: Testar se tem problema com charset
+        $teste = $pdo->query("SELECT 'teste' as teste")->fetch();
+        $tem_problema = (strpos($teste['teste'] ?? '', '\\x') !== false || 
+                        strpos($teste['teste'] ?? '', '\\z') !== false);
         
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $usuario_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        $favoritos = array();
-        
-        while ($row = $result->fetch_assoc()) {
-            $favoritos[] = array(
-                "favorito_id" => $row['favorito_id'],
-                "data_adicao" => $row['data_adicao'],
-                "evento_id" => $row['evento_id'],
-                "titulo" => $row['titulo'],
-                "data" => $row['data'],
-                "hora" => $row['hora'],
-                "local" => $row['local'],
-                "descricao" => $row['descricao'],
-                "tipoEvento" => $row['tipoEvento'],
-                "responsavel" => $row['responsavel'],
-                "banner" => $row['banner'],
-                "categoria_id" => $row['categoria_id']
-            );
+        if ($tem_problema) {
+            // MODO SERVIDOR: Usar CONVERT na verificação
+            $stmt = $pdo->prepare("
+                SELECT id_pk 
+                FROM favorito 
+                WHERE CONVERT(usuario_fk USING utf8mb4) = CONVERT(? USING utf8mb4) 
+                AND CONVERT(evento_fk USING utf8mb4) = CONVERT(? USING utf8mb4)
+            ");
+        } else {
+            // MODO LOCALHOST: Query normal
+            $stmt = $pdo->prepare("SELECT id_pk FROM favorito WHERE usuario_fk = ? AND evento_fk = ?");
         }
         
-        $response["sucesso"] = true;
-        $response["msg"] = "Favoritos carregados com sucesso";
-        $response["favoritos"] = $favoritos;
-        $response["total"] = count($favoritos);
-        
-        $stmt->close();
-        
-    } catch (Exception $e) {
-        $response["msg"] = "Erro no sistema: " . $e->getMessage();
+        $stmt->execute([$usuario_fk, $evento_fk]);
+
+        if ($stmt->rowCount() > 0) {
+            $response["msg"] = "Este evento já está favoritado.";
+        } else {
+            // Insere novo favorito
+            $stmt = $pdo->prepare("INSERT INTO favorito (usuario_fk, evento_fk, dataCriacao) VALUES (?, ?, NOW())");
+            $stmt->execute([$usuario_fk, $evento_fk]);
+
+            $response["sucesso"] = true;
+            $response["msg"] = "Favorito adicionado com sucesso!";
+            $response["id"] = $pdo->lastInsertId();
+        }
+    } catch (PDOException $e) {
+        $response["msg"] = "Erro ao adicionar favorito.";
     }
-    
+
 } else {
     $response["msg"] = "Método inválido. Use GET.";
 }
 
-if (isset($conn)) {
-    $conn->close();
-}
-
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
-exit;
+?>
